@@ -37,6 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Tus apps personalizadas
+    'farmacia',
+    'empleados',
+    'productos',
+    'clientes',
+    'ventas',
+    'recetas',
+    'reportes',
+    'medicos',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # <-- Agrega esta línea
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -54,7 +69,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Esta línea es la correcta
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +136,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+LOGIN_URL = "account_login"
+LOGOUT_URL = "account_logout"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
+

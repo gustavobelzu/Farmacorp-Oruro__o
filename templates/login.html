@@ -1,0 +1,33 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+      </head>
+<body>
+    <div class="logo-container">
+        <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacia" style="width: 120px; margin-bottom: 20px;">
+    </div>
+    <h1>Bienvenido a FARMACORP</h1>
+    <p>Esta es la página principal.</p>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div>
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit">Iniciar sesión</button>
+            {% if form.errors %}
+                <p style="color:red;">Usuario o contraseña incorrectos.</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
