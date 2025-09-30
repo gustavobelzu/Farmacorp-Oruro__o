@@ -1,26 +1,29 @@
+# productos/models.py
 from django.db import models
-
-class Proveedor(models.Model):
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
-    email = models.EmailField()
+from inventarios.models import Inventario
+from clientes.models import Cliente
 
 class Producto(models.Model):
-    codigo = models.CharField(max_length=20, unique=True)
-    nombre = models.CharField(max_length=100)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_min = models.IntegerField()
-    stock_max = models.IntegerField()
-    proveedores = models.ManyToManyField(Proveedor)
+    codigo_barra = models.CharField(max_length=100, primary_key=True)
+    nombre = models.CharField(max_length=200)
+    descripcion = models.TextField(blank=True, null=True)
+    estado = models.CharField(max_length=50, blank=True, null=True)
+    precio_unitario = models.FloatField()
+    stock = models.IntegerField()
+    fecha_vencimiento = models.DateField(blank=True, null=True)
+    iva = models.CharField(max_length=10, blank=True, null=True)
+    id_inventario = models.ForeignKey(
+        Inventario,
+        on_delete=models.CASCADE,
+        related_name='productos'
+    )
+    ci_cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='productos'
+    )
 
-class Medicamento(models.Model):
-    nombre = models.CharField(max_length=100)
-    composicion = models.TextField()
-    indicaciones = models.TextField()
-    via_administracion = models.CharField(max_length=50)
-    tipo = models.CharField(max_length=50)
-
-class Alerta(models.Model):
-    tipo = models.CharField(max_length=50)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    activada = models.BooleanField(default=False)
+    def __str__(self):
+        return self.nombre
