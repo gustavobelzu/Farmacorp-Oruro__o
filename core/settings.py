@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'proveedores.apps.ProveedoresConfig',
     'usuarios.apps.UsuariosConfig',
     'alertas.apps.AlertasConfig',
-    'inventarios.apps.InventarioConfig',
+    'inventarios.apps.InventariosConfig',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
