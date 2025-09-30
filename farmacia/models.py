@@ -1,12 +1,22 @@
 from django.db import models
 
+class Sucursal(models.Model):
+    nombre = models.CharField(max_length=255)
+    departamento = models.CharField(max_length=100)
+    nit = models.CharField(max_length=50)
+    email = models.EmailField()
+    direccion = models.CharField(max_length=255)
+    horario = models.CharField(max_length=100)
+    fecha_registro = models.DateField(auto_now_add=True)  # equivalente a DATE en SQL
+
+    def __str__(self):
+        return self.nombre
+
 
 class Farmacia(models.Model):
-    direccion = models.CharField(max_length=255)
-    email = models.EmailField()
-    telefono = models.CharField(max_length=20)
+    nombre_farmacia = models.CharField(max_length=255)
+    razonLegal = models.CharField(max_length=255)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, related_name='farmacias')
 
-class Sucursal(models.Model):
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
-    farmacia = models.ForeignKey(Farmacia, on_delete=models.CASCADE, related_name='sucursales')
+    def __str__(self):
+        return self.nombre_farmacia
