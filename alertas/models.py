@@ -1,5 +1,5 @@
 from django.db import models
-from productos.models import Inventario  # FK a Inventario
+from inventarios.models import Inventario
 
 class Alerta(models.Model):
     id_alerta = models.AutoField(primary_key=True)
