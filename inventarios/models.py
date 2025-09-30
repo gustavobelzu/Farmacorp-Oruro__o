@@ -4,7 +4,7 @@ from django.db import models
 from django.db import models
 from empleados.models import EncargadoInventario
 
-class Inventario(models.Model):
+class Inventarios(models.Model):
     cantidad = models.IntegerField()
     estado = models.CharField(max_length=50)
     fecha_actualizacion = models.DateField(auto_now=True)
