@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'ventas',
     'recetas',
     'reportes',
-    'proveedores',   # antes 'medicos'
+    'proveedores.apps.ProveedoresConfig',
     'usuarios',
     'alertas',
     'django.contrib.sites',

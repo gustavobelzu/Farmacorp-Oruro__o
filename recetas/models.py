@@ -1,6 +1,6 @@
 from django.db import models
 from clientes.models import Cliente
-from medicos.models import Medico
+from proveedores.models import Medico
 from productos.models import Medicamento
 
 class Receta(models.Model):

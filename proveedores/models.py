@@ -1,10 +1,9 @@
 from django.db import models
 
-class Medico(models.Model):
-    nombre = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=255)
+class Proveedor(models.Model):
+    nombre = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
     email = models.EmailField()
-
-    def __str__(self):
-        return self.nombre
+    direccion = models.CharField(max_length=255)
+    estado = models.CharField(max_length=50, null=True, blank=True)
+    fecha_registro = models.DateField(auto_now_add=True)
