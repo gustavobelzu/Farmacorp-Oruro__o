@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'ventas',
     'recetas',
     'reportes',
-    'medicos',
+    'proveedores',   # antes 'medicos'
+    'usuarios',
+    'alertas',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -61,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # <-- Agrega esta línea
+    'allauth.account.middleware.AccountMiddleware',  # <-- Agrega esta lï¿½nea
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -69,7 +71,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Esta línea es la correcta
+        'DIRS': [BASE_DIR / 'templates'],  # Esta lï¿½nea es la correcta
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
