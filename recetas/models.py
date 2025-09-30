@@ -1,6 +1,7 @@
 from django.db import models
 from clientes.models import Cliente
-from proveedores.models import Medico
+from proveedores.models import Proveedor
+
 
 class Receta(models.Model):
     fecha = models.DateField()
