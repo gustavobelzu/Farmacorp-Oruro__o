@@ -146,8 +146,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL = 'dashboard'      # O usa '/farmacia/' si prefieres la URL
+LOGOUT_REDIRECT_URL = '/farmacia/login/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -159,8 +159,8 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+#LOGIN_REDIRECT_URL = "farmacia"
+#LOGOUT_REDIRECT_URL = "login"
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
