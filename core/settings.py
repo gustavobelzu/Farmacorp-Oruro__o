@@ -162,4 +162,11 @@ LOGOUT_URL = "account_logout"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
+# Reemplaza 'app_label.NombreModelo' con el nombre de tu aplicación y modelo
+# Ejemplo: 'miapp.MiModelo'
+# Si no estás seguro, revisa tus modelos en el archivo models.py de tu aplicación.
+# AUTH_USER_MODEL = 'app_label.NombreModelo'
+
 

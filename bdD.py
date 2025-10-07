@@ -37,9 +37,9 @@ CREATE TABLE EncargadoInventario (
 -- USUARIOS Y REPORTES
 -- ======================
 CREATE TABLE Usuario (
-    id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    email TEXT,
     fecha_creacion DATE,
     ci_empleado TEXT,
     FOREIGN KEY (ci_empleado) REFERENCES Empleado(ci) ON DELETE SET NULL

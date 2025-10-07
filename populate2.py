@@ -266,8 +266,13 @@ for r in recetas:
 usuarios = []
 for i in range(1, 21):
     emp = random_choice(empleados)
-    u = Usuario(username=f"user{i}", ci_empleado=emp)
-    u.set_password("password123")  # ✅ guarda el hash correctamente
+    u = Usuario(
+        username=f"user{i}",
+        email=f"user{i}@mail.com",  # <-- Agrega el email
+        ci_empleado=emp
+    )
+    u.set_password("password123")
+    u.save()
     usuarios.append(u)
 
 print("¡Datos de prueba insertados correctamente!")
