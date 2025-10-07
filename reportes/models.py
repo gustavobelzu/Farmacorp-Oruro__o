@@ -1,6 +1,7 @@
-# empleados/models.py (o en un archivo separado si quieres, ej. reportes/models.py)
 from django.db import models
-from empleados.models import Empleado  # importa la tabla Empleado
+from empleados.models import Empleado
+from reportes import utils  # Importar funciones auxiliares
+
 
 class Reporte(models.Model):
     id_reporte = models.AutoField(primary_key=True)
@@ -12,6 +13,21 @@ class Reporte(models.Model):
         blank=True,
         null=True
     )
+
+    def generar_graficos(self, datos):
+        """Genera gráfico y lo guarda en /reportes/archivos/"""
+        filename = f"grafico_reporte_{self.id_reporte}.png"
+        return utils.generar_grafico(datos, filename)
+
+    def exportar_reporte_pdf(self, datos):
+        """Genera un PDF en /reportes/archivos/"""
+        filename = f"reporte_{self.id_reporte}.pdf"
+        return utils.exportar_pdf(datos, filename)
+
+    def exportar_reporte_excel(self, datos):
+        """Genera un Excel en /reportes/archivos/"""
+        filename = f"reporte_{self.id_reporte}.xlsx"
+        return utils.exportar_excel(datos, filename)
 
     def __str__(self):
         return f"Reporte {self.id_reporte} - {self.tipo}"
