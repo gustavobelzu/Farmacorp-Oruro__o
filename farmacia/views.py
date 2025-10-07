@@ -1,13 +1,15 @@
-from django.shortcuts import render
-
-# Create your views here.
-def inicio(request):
-    if 'user_id' not in request.session:
-        return redirect('login')  # Si no hay sesión, redirige al login
-    return render(request, 'farmacia/inicio.html')
-
+# farmacia/views.py
+from django.shortcuts import render, redirect
+from usuarios.models import Usuario
 
 def inicio(request):
-    return render(request, 'login.html')  # Cambia 'login.html' por 'inicio.html' si lo deseas
+    # Obtener usuario de sesión si existe
+    usuario_id = request.session.get('user_id')
+    usuario = None
+    if usuario_id:
+        try:
+            usuario = Usuario.objects.get(id_usuario=usuario_id)
+        except Usuario.DoesNotExist:
+            pass
 
-
+    return render(request, 'inicio.html', {'usuario': usuario})

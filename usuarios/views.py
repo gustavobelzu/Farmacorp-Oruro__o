@@ -1,24 +1,25 @@
-# usuarios/views.py
 from django.shortcuts import render, redirect
 from .models import Usuario
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+from django.urls import reverse
 
 def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         try:
             user = Usuario.objects.get(username=username)
-            if check_password(password, user.password):
-                # Guardar info de sesión
+            if user.check_password(password):
+                # Guardar usuario en sesión
                 request.session['user_id'] = user.id
                 request.session['username'] = user.username
-                return redirect('inicio')  # Redirige a la página principal después del login
+                messages.success(request, f"Bienvenido, {user.username}!")
+                return redirect('farmacia_inicio')  # Cambia 'farmacia_inicio' al name de tu view principal
             else:
-                messages.error(request, "Usuario o contraseña incorrectos")
+                messages.error(request, "Contraseña incorrecta.")
         except Usuario.DoesNotExist:
-            messages.error(request, "Usuario o contraseña incorrectos")
+            messages.error(request, "Usuario no encontrado.")
 
-    return render(request, "inicio.html")
+    return render(request, 'login.html')

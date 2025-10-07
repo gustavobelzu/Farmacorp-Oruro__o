@@ -3,31 +3,42 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Página Principal</title>
+    <title>Bienvenido de nuevo</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
-      </head>
+</head>
 <body>
     <div class="logo-container">
-        <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacia" style="width: 120px; margin-bottom: 20px;">
+        <!-- Cambié la imagen a un ícono de persona -->
+        <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png" 
+             alt="Usuario" style="width: 120px; margin-bottom: 20px; border-radius: 50%;">
     </div>
-    <h1>Bienvenido a FARMACORP</h1>
-    <p>Esta es la página principal.</p>
+
+    <h1>Bienvenido de nuevo</h1>
+    <p>Por favor, inicia sesión:</p>
+
     <div class="form-container">
         <form method="post">
             {% csrf_token %}
             <div>
                 <label for="id_username">Usuario:</label>
-                <input type="text" name="username" id="id_username" required>
+                <input type="text" name="username" id="id_username" 
+                       value="{{ request.POST.username }}" required>
             </div>
             <div>
                 <label for="id_password">Contraseña:</label>
                 <input type="password" name="password" id="id_password" required>
             </div>
             <button type="submit">Iniciar sesión</button>
-            {% if form.errors %}
-                <p style="color:red;">Usuario o contraseña incorrectos.</p>
-            {% endif %}
         </form>
+
+        <!-- Mensajes de error -->
+        {% if messages %}
+            <ul style="color: red;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 </body>
 </html>
