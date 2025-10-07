@@ -1,6 +1,7 @@
 import os
 import django
 import random
+
 from datetime import date, timedelta
 
 # Configurar Django
@@ -17,7 +18,8 @@ from productos.models import Producto
 from proveedores.models import Proveedor
 from ventas.models import Venta, DetalleVenta
 from recetas.models import Receta, DetalleReceta
-
+from usuarios.models import Usuario
+from django.contrib.auth.hashers import make_password
 # --------------------
 # BORRAR DATOS EXISTENTES
 # --------------------
@@ -37,6 +39,7 @@ Empleado.objects.all().delete()
 Almacen.objects.all().delete()
 Sucursal.objects.all().delete()
 Farmacia.objects.all().delete()
+Usuario.objects.all().delete()
 
 # --------------------
 # UTILIDADES
@@ -257,5 +260,18 @@ for r in recetas:
             instrucciones="Tomar después de comer",
             receta=r
         )
+# --------------------
+# USUARIOS
+# --------------------
+
+usuarios = []
+for i in range(1, 21):
+    emp = random_choice(empleados)  # Asignar un empleado aleatorio a cada usuario
+    u = Usuario.objects.create(
+        username=f"user{i}",
+        password=make_password("password123"),  # contraseña inicial segura
+        ci_empleado=emp
+    )
+    usuarios.append(u)
 
 print("¡Datos de prueba insertados correctamente!")
