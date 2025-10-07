@@ -266,12 +266,9 @@ for r in recetas:
 
 usuarios = []
 for i in range(1, 21):
-    emp = random_choice(empleados)  # Asignar un empleado aleatorio a cada usuario
-    u = Usuario.objects.create(
-        username=f"user{i}",
-        password=make_password("password123"),  # contraseña inicial segura
-        ci_empleado=emp
-    )
+    emp = random_choice(empleados)
+    u = Usuario(username=f"user{i}", ci_empleado=emp)
+    u.set_password("password123")  # ✅ guarda el hash correctamente
     usuarios.append(u)
 
 print("¡Datos de prueba insertados correctamente!")

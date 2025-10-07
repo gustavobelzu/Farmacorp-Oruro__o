@@ -5,6 +5,6 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('login')),  # Redirige "/" a "/login/"
-    path('login/', include('usuarios.urls')),
-    path('farmacia/', include('farmacia.urls')),
+    path('', include('usuarios.urls')),      # Primera página: login
+    path('farmacia/', include('farmacia.urls')),  # Dashboard
 ]

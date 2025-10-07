@@ -8,8 +8,8 @@
 </head>
 <body>
     <div class="logo-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-             alt="Usuario" style="width: 120px; margin-bottom: 20px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+             alt="Logo Usuario" style="width: 120px; margin-bottom: 20px;">
     </div>
 
     <h1>Bienvenido de nuevo</h1>
@@ -20,8 +20,7 @@
             {% csrf_token %}
             <div>
                 <label for="id_username">Usuario:</label>
-                <input type="text" name="username" id="id_username" 
-                       value="{{ request.POST.username }}" required>
+                <input type="text" name="username" id="id_username" required>
             </div>
             <div>
                 <label for="id_password">Contraseña:</label>
@@ -31,7 +30,7 @@
         </form>
 
         {% if messages %}
-            <ul style="color:red;">
+            <ul style="color: red;">
                 {% for message in messages %}
                     <li>{{ message }}</li>
                 {% endfor %}
