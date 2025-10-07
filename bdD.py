@@ -90,6 +90,19 @@ CREATE TABLE Farmacia (
 -- ======================
 -- INVENTARIO, PRODUCTO Y ALERTA
 -- ======================
+-- ======================
+-- ALMACEN
+-- ======================
+CREATE TABLE Almacen (
+    id_almacen INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoria TEXT,
+    ubicacion TEXT,
+    fecha_ingreso DATE,
+    fecha_salida DATE
+);
+
+-- Relación de composición con Inventario
+-- Cada Inventario pertenece a un Almacen, si se elimina el Almacen se elimina también su Inventario
 CREATE TABLE Inventario (
     id_inventario INTEGER PRIMARY KEY AUTOINCREMENT,
     cantidad INT,
@@ -97,7 +110,9 @@ CREATE TABLE Inventario (
     fecha_actualizacion DATE,
     stock_minimo INT,
     ci_encargado TEXT NOT NULL,
-    FOREIGN KEY (ci_encargado) REFERENCES EncargadoInventario(ci) ON DELETE CASCADE
+    id_almacen INTEGER NOT NULL,
+    FOREIGN KEY (ci_encargado) REFERENCES EncargadoInventario(ci) ON DELETE CASCADE,
+    FOREIGN KEY (id_almacen) REFERENCES Almacen(id_almacen) ON DELETE CASCADE
 );
 
 CREATE TABLE Producto (
