@@ -65,7 +65,6 @@ class Venta(models.Model):
     def __str__(self):
         return f"Venta {self.id} - Cliente: {self.cliente.nombre}"
 
-
 class DetalleVenta(models.Model):
     venta = models.ForeignKey(
         Venta,
