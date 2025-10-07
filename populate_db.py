@@ -6,7 +6,7 @@ from django.utils import timezone
 from empleados.models import Empleado, Farmaceutico, Administrador, EncargadoInventario
 from farmacia.models import Farmacia, Sucursal
 from clientes.models import Cliente
-from inventarios.models import Inventario
+from inventarios.models import Inventario, Almacen
 from alertas.models import Alerta
 from productos.models import Producto
 from proveedores.models import Proveedor
@@ -27,6 +27,7 @@ Farmaceutico.objects.all().delete()
 Administrador.objects.all().delete()
 EncargadoInventario.objects.all().delete()
 Empleado.objects.all().delete()
+almacenes.objects.all().delete()
 
 # ---------- UTILIDADES ----------
 def random_date(start_year=2020, end_year=2025):
@@ -110,18 +111,29 @@ for i in range(1, 21):
     )
     clientes.append(cli)
 
-# ---------- INVENTARIOS ----------
+# ---------- INVENTARIOS Y ALMACEN----------
+# Crear almacenes
+almacenes = []
+for i in range(5):
+    alm = Almacen.objects.create(
+        categoria=random_choice(categorias),
+        ubicacion=f"Bodega {i+1}",
+        fecha_ingreso=random_date()
+    )
+    almacenes.append(alm)
+
+# Crear inventarios asociados a un almacén
 inventarios = []
-for i in range(1, 21):
+for i in range(20):
     inv = Inventario.objects.create(
         cantidad=random.randint(10, 100),
         estado="Disponible",
         fecha_actualizacion=random_date(),
         stock_minimo=10,
-        ci_encargado=random_choice(encargados)
+        ci_encargado=random_choice(encargados),
+        almacen=random_choice(almacenes)
     )
     inventarios.append(inv)
-
 # ---------- ALERTAS ----------
 alertas = []
 for i in range(1, 21):
