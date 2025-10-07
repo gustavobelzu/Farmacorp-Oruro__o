@@ -56,6 +56,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',      # Backend por defecto de Django
+    'allauth.account.auth_backends.AuthenticationBackend',  # Backend de django-allauth
+]
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -155,4 +161,5 @@ LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
+
 

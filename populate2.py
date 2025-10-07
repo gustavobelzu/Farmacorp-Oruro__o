@@ -263,7 +263,6 @@ for r in recetas:
 # --------------------
 # USUARIOS
 # --------------------
-
 usuarios = []
 for i in range(1, 21):
     emp = random_choice(empleados)

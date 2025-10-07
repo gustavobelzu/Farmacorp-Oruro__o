@@ -1,3 +1,4 @@
+# usuarios/views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Usuario
@@ -10,21 +11,26 @@ def login_view(request):
         try:
             usuario = Usuario.objects.get(username=username)
         except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no existe")
-            return render(request, "login.html")
+            messages.error(request, "❌ El usuario no existe.")
+            return render(request, "usuarios/login.html")
 
+        # Verifica contraseña con tu método personalizado
         if usuario.check_password(password):
-            # Guardar en sesión
+            # Guardar datos de sesión
             request.session['usuario_id'] = usuario.id_usuario
-            return redirect('dashboard')  # redirige a farmacia/dashboard
-        else:
-            messages.error(request, "Contraseña incorrecta")
-            return render(request, "login.html")
+            request.session['usuario_nombre'] = usuario.username
 
-    return render(request, "login.html")
+            messages.success(request, f"✅ Bienvenido {usuario.username}")
+            return redirect('farmacia_dashboard')  # nombre exacto de tu ruta en farmacia/urls.py
+        else:
+            messages.error(request, "⚠️ Contraseña incorrecta.")
+            return render(request, "usuarios/login.html")
+
+    return render(request, "usuarios/login.html")
 
 
 def logout_view(request):
-    if 'usuario_id' in request.session:
-        del request.session['usuario_id']
+    """Cerrar sesión y volver al login"""
+    request.session.flush()  # elimina toda la sesión del usuario
+    messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
