@@ -5,6 +5,26 @@
     <meta charset="UTF-8">
     <title>Farmacorp Dashboard</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .menu-botones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .menu-botones a {
+            padding: 12px 24px;
+            background: #2e8b57;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .menu-botones a:hover {
+            background: #246b44;
+        }
+    </style>
 </head>
 <body>
     <div class="logo-container">
@@ -16,6 +36,21 @@
 
     {% if usuario %}
         <p>Has iniciado sesión como: {{ usuario.username }}</p>
+        <div class="menu-botones">
+            <a href="{% url 'farmacia' %}">Farmacia</a>
+            <a href="{% url 'usuario' %}">Usuario</a>
+            <a href="{% url 'sucursal' %}">Sucursal</a>
+            <a href="{% url 'empleado' %}">Empleado</a>
+            <a href="{% url 'proveedor' %}">Proveedor</a>
+            <a href="{% url 'reporte' %}">Reporte</a>
+            <a href="{% url 'cliente' %}">Cliente</a>
+            <a href="{% url 'venta' %}">Venta</a>
+            <a href="{% url 'receta' %}">Receta</a>
+            <a href="{% url 'producto' %}">Producto</a>
+            <a href="{% url 'alerta' %}">Alerta</a>
+            <a href="{% url 'inventario' %}">Inventario</a>
+            <a href="{% url 'almacen' %}">Almacén</a>
+        </div>
         <a href="{% url 'logout' %}">Cerrar sesión</a>
     {% else %}
         <p>No has iniciado sesión.</p>
