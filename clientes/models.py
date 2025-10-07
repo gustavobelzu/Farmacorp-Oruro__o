@@ -1,6 +1,6 @@
 # clientes/models.py
 from django.db import models
-from empleados.models import Empleado  # Para la relación con Empleado
+from empleados.models import Empleado
 
 class Cliente(models.Model):
     ci_cliente = models.CharField(max_length=20, primary_key=True)
@@ -16,3 +16,26 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.ci_cliente})"
+
+    # ======================
+    # MÉTODOS DEL CLIENTE
+    # ======================
+
+    def realizar_compra(self, productos):
+        """
+        Simula la acción de realizar una compra.
+        productos: lista de diccionarios con {producto, cantidad}.
+        """
+        return f"Cliente {self.nombre} realizó la compra de {len(productos)} productos."
+
+    def consultar_receta(self, receta_id):
+        """
+        Simula la consulta de una receta médica por su ID.
+        """
+        return f"Cliente {self.nombre} consulta la receta con ID {receta_id}."
+
+    def solicitar_factura(self, compra_id):
+        """
+        Simula la solicitud de factura para una compra realizada.
+        """
+        return f"Cliente {self.nombre} solicita factura de la compra {compra_id}."
