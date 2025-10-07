@@ -1,15 +1,13 @@
-# populate_db.py
 import os
 import django
-
-# Configurar Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
-django.setup()
-
 import random
 from datetime import date, timedelta
-from django.utils import timezone
 
+# Configurar Django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")  # Cambia "core" si tu proyecto tiene otro nombre
+django.setup()
+
+# Importar modelos
 from empleados.models import Empleado, Farmaceutico, Administrador, EncargadoInventario
 from farmacia.models import Farmacia, Sucursal
 from clientes.models import Cliente
@@ -20,7 +18,9 @@ from proveedores.models import Proveedor
 from ventas.models import Venta, DetalleVenta
 from recetas.models import Receta, DetalleReceta
 
-# ---- BORRAR DATOS EXISTENTES ----
+# --------------------
+# BORRAR DATOS EXISTENTES
+# --------------------
 DetalleReceta.objects.all().delete()
 Receta.objects.all().delete()
 DetalleVenta.objects.all().delete()
@@ -35,8 +35,12 @@ Administrador.objects.all().delete()
 EncargadoInventario.objects.all().delete()
 Empleado.objects.all().delete()
 Almacen.objects.all().delete()
+Sucursal.objects.all().delete()
+Farmacia.objects.all().delete()
 
-# ---------- UTILIDADES ----------
+# --------------------
+# UTILIDADES
+# --------------------
 def random_date(start_year=2020, end_year=2025):
     start = date(start_year, 1, 1)
     end = date(end_year, 12, 31)
@@ -46,7 +50,12 @@ def random_date(start_year=2020, end_year=2025):
 def random_choice(choices):
     return random.choice(choices)
 
-# ---------- SUCURSAL Y FARMACIA ----------
+categorias = ["Medicamentos", "Cosméticos", "Higiene", "Suplementos", "Otros"]
+especialidades = ["General", "Pediatria", "Cardiologia"]
+
+# --------------------
+# SUCURSALES Y FARMACIAS
+# --------------------
 sucursales = []
 for i in range(1, 6):
     suc = Sucursal.objects.create(
@@ -69,8 +78,14 @@ for i in range(1, 6):
     )
     farmacias.append(farm)
 
-# ---------- EMPLEADOS Y SUBTIPOS ----------
+# --------------------
+# EMPLEADOS Y SUBTIPOS
+# --------------------
 empleados = []
+farmaceuticos = []
+administradores = []
+encargados = []
+
 for i in range(1, 21):
     emp = Empleado.objects.create(
         ci=f"18062{i:04}",
@@ -87,16 +102,12 @@ for i in range(1, 21):
     )
     empleados.append(emp)
 
-# Asignar roles
-farmaceuticos = []
-administradores = []
-encargados = []
-for emp in empleados:
+    # Asignar rol
     if emp.cargo == "Farmaceutico":
         f = Farmaceutico.objects.create(
             empleado=emp,
             matricula=f"M-{emp.ci}",
-            especialidad=random_choice(["General", "Pediatria", "Cardiologia"])
+            especialidad=random_choice(especialidades)
         )
         farmaceuticos.append(f)
     elif emp.cargo == "Administrador":
@@ -106,7 +117,9 @@ for emp in empleados:
         e = EncargadoInventario.objects.create(empleado=emp)
         encargados.append(e)
 
-# ---------- CLIENTES ----------
+# --------------------
+# CLIENTES
+# --------------------
 clientes = []
 for i in range(1, 21):
     cli = Cliente.objects.create(
@@ -118,10 +131,9 @@ for i in range(1, 21):
     )
     clientes.append(cli)
 
-# ---------- INVENTARIOS Y ALMACEN----------
-# Crear almacenes
-categorias = ["Medicamentos", "Cosméticos", "Higiene", "Suplementos", "Otros"]
-
+# --------------------
+# ALMACENES
+# --------------------
 almacenes = []
 for i in range(5):
     alm = Almacen.objects.create(
@@ -131,7 +143,9 @@ for i in range(5):
     )
     almacenes.append(alm)
 
-# Crear inventarios asociados a un almacén
+# --------------------
+# INVENTARIOS
+# --------------------
 inventarios = []
 for i in range(20):
     inv = Inventario.objects.create(
@@ -143,33 +157,10 @@ for i in range(20):
         id_almacen=random_choice(almacenes)
     )
     inventarios.append(inv)
-# ---------- ALERTAS ----------
-alertas = []
-for i in range(1, 21):
-    a = Alerta.objects.create(
-        tipo=random_choice(["Vencimiento", "Bajo stock", "Error de registro"]),
-        descripcion=f"Descripcion alerta {i}",
-        fecha_alerta=random_date(),
-        estado="Pendiente",
-        inventario=random_choice(inventarios)
-    )
-    alertas.append(a)
 
-# ---------- PROVEEDORES ----------
-proveedores = []
-for i in range(1, 21):
-    p = Proveedor.objects.create(
-        nombre=f"Proveedor {i}",
-        telefono=f"71000{i:03}",
-        email=f"prov{i}@mail.com",
-        direccion=f"Calle Proveedor {i}",
-        estado="Activo",
-        fecha_registro=random_date(),
-        inventario=random_choice(inventarios)
-    )
-    proveedores.append(p)
-
-# ---------- PRODUCTOS ----------
+# --------------------
+# PRODUCTOS
+# --------------------
 productos = []
 for i in range(1, 21):
     prod = Producto.objects.create(
@@ -186,7 +177,39 @@ for i in range(1, 21):
     )
     productos.append(prod)
 
-# ---------- VENTAS Y DETALLES ----------
+# --------------------
+# PROVEEDORES
+# --------------------
+proveedores = []
+for i in range(1, 21):
+    p = Proveedor.objects.create(
+        nombre=f"Proveedor {i}",
+        telefono=f"71000{i:03}",
+        email=f"prov{i}@mail.com",
+        direccion=f"Calle Proveedor {i}",
+        estado="Activo",
+        fecha_registro=random_date(),
+        inventario=random_choice(inventarios)
+    )
+    proveedores.append(p)
+
+# --------------------
+# ALERTAS
+# --------------------
+alertas = []
+for i in range(1, 21):
+    a = Alerta.objects.create(
+        tipo=random_choice(["Vencimiento", "Bajo stock", "Error de registro"]),
+        descripcion=f"Descripcion alerta {i}",
+        fecha_alerta=random_date(),
+        estado="Pendiente",
+        inventario=random_choice(inventarios)
+    )
+    alertas.append(a)
+
+# --------------------
+# VENTAS Y DETALLES
+# --------------------
 ventas = []
 for i in range(1, 21):
     v = Venta.objects.create(
@@ -199,7 +222,7 @@ for i in range(1, 21):
     ventas.append(v)
 
 for v in ventas:
-    for j in range(2):  # 2 detalles por venta
+    for j in range(2):
         DetalleVenta.objects.create(
             cantidad=random.randint(1, 5),
             precio_unitario=random.randint(10, 200),
@@ -207,10 +230,12 @@ for v in ventas:
             metodo_pago=random_choice(["Efectivo", "Tarjeta"]),
             descuento=random_choice([True, False]),
             venta=v,
-            producto=random_choice(productos)  # ✅ agregar el producto
+            producto=random_choice(productos)  # ✅ ahora obligatorio
         )
 
-# ---------- RECETAS Y DETALLES ----------
+# --------------------
+# RECETAS Y DETALLES
+# --------------------
 recetas = []
 for i in range(1, 21):
     r = Receta.objects.create(
