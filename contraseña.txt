@@ -1,3 +1,6 @@
 admin
 gustavo.belzu@sistemas.edu.bo
 123
+
+user1
+password123
