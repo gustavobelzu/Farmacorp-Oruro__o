@@ -1,4 +1,11 @@
 # populate_db.py
+import os
+import django
+
+# Configurar Django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
+django.setup()
+
 import random
 from datetime import date, timedelta
 from django.utils import timezone
@@ -27,7 +34,7 @@ Farmaceutico.objects.all().delete()
 Administrador.objects.all().delete()
 EncargadoInventario.objects.all().delete()
 Empleado.objects.all().delete()
-almacenes.objects.all().delete()
+almacen.objects.all().delete()
 
 # ---------- UTILIDADES ----------
 def random_date(start_year=2020, end_year=2025):
