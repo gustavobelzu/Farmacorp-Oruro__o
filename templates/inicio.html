@@ -1,4 +1,91 @@
-<h1>Bienvenido a FARMACORP</h1>
-{% if usuario %}
-<p>Has iniciado sesión como: {{ usuario.username }}</p>
-{% endif %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmacorp - Pagina Principañ</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #1e90ff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header img {
+            width: 120px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e90ff;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .usuario-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0f70d1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Farmacorp Logo">
+        <h2>Farmacia</h2>
+    </div>
+
+    <div class="container">
+        <h1>Bienvenido a Farmacorp</h1>
+
+        {% if usuario %}
+            <div class="usuario-info">
+                <p>Has iniciado sesión como: <strong>{{ usuario.username }}</strong></p>
+                <a href="{% url 'logout' %}" class="btn">Cerrar sesión</a>
+            </div>
+        {% else %}
+            <p>No has iniciado sesión.</p>
+            <div class="usuario-info">
+                <a href="{% url 'login' %}" class="btn">Iniciar sesión</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

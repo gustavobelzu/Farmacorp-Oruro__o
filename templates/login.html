@@ -8,9 +8,8 @@
 </head>
 <body>
     <div class="logo-container">
-        <!-- Cambié la imagen a un ícono de persona -->
-        <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png" 
-             alt="Usuario" style="width: 120px; margin-bottom: 20px; border-radius: 50%;">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+             alt="Usuario" style="width: 120px; margin-bottom: 20px;">
     </div>
 
     <h1>Bienvenido de nuevo</h1>
@@ -31,9 +30,8 @@
             <button type="submit">Iniciar sesión</button>
         </form>
 
-        <!-- Mensajes de error -->
         {% if messages %}
-            <ul style="color: red;">
+            <ul style="color:red;">
                 {% for message in messages %}
                     <li>{{ message }}</li>
                 {% endfor %}
