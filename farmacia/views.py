@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def dashboard(request):
-    usuario = request.user  # Django maneja el usuario autenticado
+    usuario = request.user
     return render(request, "inicio.html", {"usuario": usuario})
