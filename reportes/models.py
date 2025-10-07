@@ -13,7 +13,7 @@ class Reporte(models.Model):
         blank=True,
         null=True
     )
-
+    #METODOS REPORTES
     def generar_graficos(self, datos):
         """Genera gráfico y lo guarda en /reportes/archivos/"""
         filename = f"grafico_reporte_{self.id_reporte}.png"
