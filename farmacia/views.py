@@ -1,13 +1,11 @@
 from django.shortcuts import render
 from usuarios.models import Usuario
 
-def inicio(request):
+def dashboard(request):
     usuario = None
-    user_id = request.session.get('user_id')
-    if user_id:
+    if 'usuario_id' in request.session:
         try:
-            usuario = Usuario.objects.get(id_usuario=user_id)
+            usuario = Usuario.objects.get(id=request.session['usuario_id'])
         except Usuario.DoesNotExist:
             pass
-
     return render(request, "inicio.html", {"usuario": usuario})

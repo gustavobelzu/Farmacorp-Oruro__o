@@ -6,23 +6,17 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-
         try:
             usuario = Usuario.objects.get(username=username)
             if usuario.check_password(password):
-                request.session['user_id'] = usuario.id_usuario  # Guardar usuario en sesión
-                return redirect('inicio')
+                request.session['usuario_id'] = usuario.id
+                return redirect('dashboard')  # nombre del view en farmacia/urls.py
             else:
-                messages.error(request, "Contraseña incorrecta.")
+                messages.error(request, "Contraseña incorrecta")
         except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no encontrado.")
-
+            messages.error(request, "Usuario no existe")
     return render(request, "login.html")
 
-
 def logout_view(request):
-    try:
-        del request.session['user_id']  # Eliminar usuario de la sesión
-    except KeyError:
-        pass
+    request.session.flush()  # Limpiar sesión
     return redirect('login')
