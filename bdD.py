@@ -198,3 +198,4 @@ CREATE TABLE DetalleReceta (
     id_receta TEXT NOT NULL,
     FOREIGN KEY (id_receta) REFERENCES Receta(id_receta) ON DELETE CASCADE
 );
+

@@ -34,7 +34,7 @@ Farmaceutico.objects.all().delete()
 Administrador.objects.all().delete()
 EncargadoInventario.objects.all().delete()
 Empleado.objects.all().delete()
-almacen.objects.all().delete()
+Almacen.objects.all().delete()
 
 # ---------- UTILIDADES ----------
 def random_date(start_year=2020, end_year=2025):
@@ -120,14 +120,17 @@ for i in range(1, 21):
 
 # ---------- INVENTARIOS Y ALMACEN----------
 # Crear almacenes
+categorias = ["Medicamentos", "Cosméticos", "Higiene", "Suplementos", "Otros"]
+
 almacenes = []
 for i in range(5):
     alm = Almacen.objects.create(
-        categoria=random_choice(categorias),
+        categoria=random_choice(categorias),  # ✅ usar solo el campo que existe en el modelo
         ubicacion=f"Bodega {i+1}",
         fecha_ingreso=random_date()
     )
     almacenes.append(alm)
+
 
 # Crear inventarios asociados a un almacén
 inventarios = []
