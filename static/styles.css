@@ -115,3 +115,12 @@ button:hover {
         width: 70px;
     }
 }
+.form-buttons {
+    grid-column: 1 / -1; /* Ocupa las dos columnas */
+    display: flex;
+    justify-content: center; /* Centra los botones */
+    gap: 20px;              /* Espacio entre botones */
+    margin-top: 20px;
+}
+
+
