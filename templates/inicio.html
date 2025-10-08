@@ -3,58 +3,242 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Farmacorp Dashboard</title>
+    <title>FARMACORP</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
-        .menu-botones {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 30px 0;
+        body {
+            font-family: Arial, sans-serif;
+            background: #e3f2fd;
+            margin: 0;
+            padding: 0;
         }
-        .menu-botones a {
-            padding: 12px 24px;
-            background: #2e8b57;
+
+        /* === CABECERA === */
+        .header {
+            background: #2196f3;
             color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background 0.2s;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .menu-botones a:hover {
-            background: #246b44;
+
+        .logo-titulo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1; /* Ocupa todo el espacio disponible para centrar */
+            justify-content: center; /* Centra logo + título */
+        }
+
+        .logo-titulo img {
+            width: 110px; /* Logo más grande */
+            height: auto;
+        }
+
+        .titulo {
+            font-size: 2.4em;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* === BOTÓN CERRAR SESIÓN === */
+        .header form {
+            margin-left: auto; /* Empuja el botón a la derecha */
+            display: flex;
+        }
+
+        .logout-btn {
+            background: #64b5f6;
+            color: #fff;
+            border: 2px solid #1565c0;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 10;
+        }
+
+        .logout-btn:hover {
+            background: #1e88e5;
+            transform: scale(1.05);
+        }
+
+        /* === DATOS DE USUARIO === */
+        .usuario-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #bbdefb;
+            color: #0d47a1;
+            padding: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .usuario-bar img {
+            width: 50px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #2196f3;
+        }
+
+        .usuario-datos {
+            font-size: 1em;
+            background: #fff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #0001;
+            text-align: center;
+            color: #0d47a1;
+        }
+
+        .usuario-datos b {
+            display: block;
+            font-size: 1.1em;
+            color: #1565c0;
+        }
+
+        .usuario-datos .fecha {
+            font-size: 0.9em;
+            color: #757575;
+            margin-top: 2px;
+        }
+
+        /* === MENÚ === */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+
+        .menu-item {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0001;
+            text-align: center;
+            padding: 25px 10px 15px 10px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            text-decoration: none; /* sin subrayado */
+            border: 2px solid #90caf9; /* borde celeste */
+        }
+
+        .menu-item:hover {
+            box-shadow: 0 4px 16px #2196f344;
+            transform: translateY(-4px);
+            border-color: #42a5f5;
+        }
+
+        .menu-item img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+
+        .menu-item span {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 700px) {
+            .menu-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 500px) {
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 10px;
+            }
+            .logout-btn {
+                margin-top: 10px;
+                position: static;
+            }
+            .titulo {
+                font-size: 2em;
+            }
+            .logo-titulo img {
+                width: 90px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="logo-container">
-        <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" 
-             alt="Logo Farmacorp" style="width: 120px; margin-bottom: 20px;">
-    </div>
-
-    <h1>Menu Principal de Farmacorp</h1>
+    <div class="header">
+        <div class="logo-titulo">
+            <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacorp">
+            <div class="titulo">FARMACORP</div>
+        </div>
+        {% if usuario %}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Cerrar sesión</button>
+        </form>
+        {% endif %}
+    </div>    
 
     {% if usuario %}
-        <p>Has iniciado sesión como: {{ usuario.username }}</p>
-        <div class="menu-botones">
-            <a href="{% url 'farmacia' %}">Farmacia</a>
-            <a href="{% url 'usuario' %}">Usuario</a>
-            <a href="{% url 'sucursal' %}">Sucursal</a>
-            <a href="{% url 'empleado' %}">Empleado</a>
-            <a href="{% url 'proveedor' %}">Proveedor</a>
-            <a href="{% url 'reporte' %}">Reporte</a>
-            <a href="{% url 'cliente' %}">Cliente</a>
-            <a href="{% url 'venta' %}">Venta</a>
-            <a href="{% url 'receta' %}">Receta</a>
-            <a href="{% url 'producto' %}">Producto</a>
-            <a href="{% url 'alerta' %}">Alerta</a>
-            <a href="{% url 'inventario' %}">Inventario</a>
-            <a href="{% url 'almacen' %}">Almacén</a>
+    <div class="usuario-bar">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Usuario">
+        <span>Bienvenido de Nuevo</span>
+        <div class="usuario-datos">
+            <b>{{ usuario.username }}</b>
+            <div class="fecha">{{ now|date:"d/m/Y H:i" }}</div>
         </div>
-        <a href="{% url 'logout' %}">Cerrar sesión</a>
-    {% else %}
-        <p>No has iniciado sesión.</p>
-        <a href="{% url 'login' %}">Ir a Login</a>
+    </div>
+    <p>Fecha actual: {% now "d/m/Y" %}</p>
     {% endif %}
+    <div class="menu-grid">
+        <a href="{% url 'sucursal' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Sucursal">
+            <span>SUCURSAL</span>
+        </a>
+        <a href="{% url 'producto' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921822.png" alt="Productos">
+            <span>PRODUCTOS</span>
+        </a>
+        <a href="{% url 'inventario' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png" alt="Inventario">
+            <span>INVENTARIO</span>
+        </a>
+        <a href="{% url 'empleado' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/219/219983.png" alt="Empleados">
+            <span>EMPLEADOS</span>
+        </a>
+        <a href="{% url 'cliente' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="Clientes">
+            <span>CLIENTES</span>
+        </a>
+        <a href="{% url 'receta' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Recetas">
+            <span>RECETAS</span>
+        </a>
+        <a href="{% url 'proveedor' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921220.png" alt="Proveedores">
+            <span>PROVEEDORES</span>
+        </a>
+        <a href="{% url 'reporte' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png" alt="Reportes">
+            <span>REPORTES</span>
+        </a>
+        <a href="{% url 'alerta' %}" class="menu-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Alertas">
+            <span>ALERTAS</span>
+        </a>
+        <a href="{% url 'venta' %}" class="menu-item" style="grid-column: 2 / span 1;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1170/1170627.png" alt="Ventas">
+            <span>VENTAS</span>
+        </a>
+    </div>
 </body>
 </html>
