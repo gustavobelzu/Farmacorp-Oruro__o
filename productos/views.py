@@ -12,10 +12,11 @@ def crear_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect('producto_listar')  # Asegúrate que el nombre coincida
     else:
         form = ProductoForm()
-    return render(request, 'producto.html', {'form': form})
+    return render(request, 'crear.html', {'form': form})
+
 
 # Editar producto
 def editar_producto(request, codigo_barra):

@@ -57,7 +57,10 @@
     <div class="main-content">
         <h1>Listado de Productos</h1>
         <div class="buttons-top">
-            <a href="{% url 'crear_producto' %}">Registrar Producto</a>
+            <a href="{% url 'crear_producto' %}" class="menu-item">
+            <span>Crear Producto</span>
+            </a>
+
             <a href="{% url 'dashboard' %}">Volver al Menú</a>
         </div>
 
