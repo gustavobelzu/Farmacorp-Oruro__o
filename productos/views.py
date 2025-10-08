@@ -5,7 +5,7 @@ from django.contrib import messages
 
 def listar_productos(request):
     productos = Producto.objects.all()
-    return render(request, 'producto.html', {'productos': productos})
+    return render(request, 'productos/producto.html', {'productos': productos})
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -19,9 +19,9 @@ def crear_producto(request):
             return redirect('producto_listar')  # redirige al listado
     else:
         form = ProductoForm()
-    return render(request, 'crear.html', {'form': form})
+    return render(request, 'productos/crear_producto.html', {'form': form})
 
-
+from django.contrib import messages
 
 def editar_producto(request, codigo_barra):
     producto = get_object_or_404(Producto, codigo_barra=codigo_barra)
@@ -30,15 +30,15 @@ def editar_producto(request, codigo_barra):
         if form.is_valid():
             form.save()
             messages.success(request, 'Producto actualizado correctamente')
-            return redirect('producto_listar')
+            return redirect('producto_listar')  # redirige a la lista
     else:
         form = ProductoForm(instance=producto)
-    return render(request, 'crear.html', {'form': form})
+    return render(request, 'productos/editar_producto.html', {'form': form})
+
 
 def eliminar_producto(request, codigo_barra):
     producto = get_object_or_404(Producto, codigo_barra=codigo_barra)
     if request.method == 'POST':
         producto.delete()
-        messages.success(request, 'Producto eliminado correctamente')
         return redirect('producto_listar')
-    return render(request, 'producto.html', {'producto': producto})
+    return redirect('producto_listar')
