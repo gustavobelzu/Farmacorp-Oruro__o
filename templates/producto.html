@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Productos</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #2196f3;
+            text-align: left;
+        }
+        th {
+            background-color: #2196f3;
+            color: white;
+        }
+        a.button {
+            background-color: #64b5f6;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        a.button:hover {
+            background-color: #1e88e5;
+        }
+        .crear-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Listado de Productos</h1>
+    <div class="crear-btn">
+        <a href="{% url 'crear_producto' %}" class="button">+ Nuevo Producto</a>
+    </div>
+    <table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Vencimiento</th>
+            <th>IVA</th>
+            <th>Inventario</th>
+            <th>Cliente</th>
+            <th>Acciones</th>
+        </tr>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.codigo_barra }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>{{ producto.precio_unitario }}</td>
+            <td>{{ producto.stock }}</td>
+            <td>{{ producto.fecha_vencimiento }}</td>
+            <td>{{ producto.iva }}</td>
+            <td>{{ producto.id_inventario }}</td>
+            <td>{{ producto.ci_cliente }}</td>
+            <td>
+                <a href="{% url 'editar_producto' producto.codigo_barra %}" class="button">Editar</a>
+                <a href="{% url 'eliminar_producto' producto.codigo_barra %}" class="button">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="10" style="text-align:center;">No hay productos registrados.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
