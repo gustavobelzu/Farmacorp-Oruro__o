@@ -3,12 +3,42 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Listado de Productos</title>
+    <title>Productos - Farmacorp</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
-        table {
+        body {
+            font-family: Arial, sans-serif;
+            background: #e3f2fd;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #0d47a1;
+        }
+        .botones {
             width: 90%;
             margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        a.button {
+            background-color: #64b5f6;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        a.button:hover {
+            background-color: #1e88e5;
+        }
+        table {
+            width: 90%;
+            margin: 10px auto 30px auto;
             border-collapse: collapse;
         }
         th, td {
@@ -20,30 +50,19 @@
             background-color: #2196f3;
             color: white;
         }
-        a.button {
-            background-color: #64b5f6;
-            color: white;
-            padding: 6px 12px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
-        a.button:hover {
-            background-color: #1e88e5;
-        }
-        .crear-btn {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;">Listado de Productos</h1>
-    <div class="crear-btn">
-        <a href="{% url 'crear_producto' %}" class="button">+ Nuevo Producto</a>
+
+    <h1>Listado de Productos</h1>
+
+    <div class="botones">
+        <a href="{% url 'crear_producto' %}" class="button">+ Registrar Producto</a>
+        <a href="{% url 'editar_producto' productos.first.codigo_barra %}" class="button">Editar Producto</a>
+        <a href="{% url 'eliminar_producto' productos.first.codigo_barra %}" class="button">Eliminar Producto</a>
+        <a href="/farmacia/" class="button">← Volver al Menú Principal</a>
     </div>
+
     <table>
         <tr>
             <th>Código</th>
@@ -55,7 +74,6 @@
             <th>IVA</th>
             <th>Inventario</th>
             <th>Cliente</th>
-            <th>Acciones</th>
         </tr>
         {% for producto in productos %}
         <tr>
@@ -66,18 +84,15 @@
             <td>{{ producto.stock }}</td>
             <td>{{ producto.fecha_vencimiento }}</td>
             <td>{{ producto.iva }}</td>
-            <td>{{ producto.id_inventario }}</td>
-            <td>{{ producto.ci_cliente }}</td>
-            <td>
-                <a href="{% url 'editar_producto' producto.codigo_barra %}" class="button">Editar</a>
-                <a href="{% url 'eliminar_producto' producto.codigo_barra %}" class="button">Eliminar</a>
-            </td>
+            <td>{% if producto.id_inventario %}{{ producto.id_inventario.id }}{% else %}-{% endif %}</td>
+            <td>{% if producto.ci_cliente %}{{ producto.ci_cliente.nombre }}{% else %}-{% endif %}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="10" style="text-align:center;">No hay productos registrados.</td>
+            <td colspan="9" style="text-align:center;">No hay productos registrados.</td>
         </tr>
         {% endfor %}
     </table>
+
 </body>
 </html>
