@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>FARMACORP</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        body { font-family: Arial,sans-serif; margin:0; padding:0; display:flex; background:#e3f2fd; }
+        .sidebar { width:250px; background:#2196f3; color:#fff; height:100vh; display:flex; flex-direction:column; position:fixed; }
+        .sidebar-header { text-align:center; padding:20px 10px; border-bottom:2px solid #1976d2; }
+        .sidebar-header img { width:80px; height:auto; }
+        .sidebar-header h2 { margin:10px 0 0; font-size:1.5em; }
+        .menu { flex:1; display:flex; flex-direction:column; padding:20px 0; }
+        .menu a { display:flex; align-items:center; padding:12px 20px; color:white; text-decoration:none; font-weight:bold; transition:background 0.2s; }
+        .menu a img { width:28px; margin-right:12px; }
+        .menu a:hover { background:#1e88e5; }
+        .logout-btn { margin:20px; background:#64b5f6; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; transition:background 0.2s; }
+        .logout-btn:hover { background:#1e88e5; }
+        .main-content { margin-left:250px; flex:1; padding:20px 40px; }
+        h1 { text-align:center; color:#0d47a1; }
+        .buttons-top { display:flex; justify-content:center; gap:15px; margin-bottom:20px; }
+        .buttons-top a { padding:10px 18px; background:#64b5f6; color:white; text-decoration:none; border-radius:8px; font-weight:bold; transition:background 0.2s; }
+        .buttons-top a:hover { background:#1e88e5; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:10px; border:1px solid #1976d2; text-align:left; }
+        th { background:#2196f3; color:white; }
+        @media (max-width:700px){ body{flex-direction:column;} .sidebar{width:100%;height:auto;} .main-content{margin-left:0;} }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacorp">
+            <h2>FARMACORP</h2>
+        </div>
+        <div class="menu">
+            <a href="{% url 'sucursal' %}"><img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="Sucursal">SUCURSAL</a>
+            <a href="{% url 'producto_listar' %}"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">PRODUCTOS</a>
+            <a href="{% url 'inventario' %}"><img src="https://cdn-icons-png.flaticon.com/128/2825/2825867.png" alt="Inventario">INVENTARIO</a>
+            <a href="{% url 'empleado' %}"><img src="https://cdn-icons-png.flaticon.com/512/219/219983.png" alt="Empleados">EMPLEADOS</a>
+            <a href="{% url 'cliente' %}"><img src="https://cdn-icons-png.flaticon.com/128/6012/6012311.png" alt="Clientes">CLIENTES</a>
+            <a href="{% url 'receta' %}"><img src="https://cdn-icons-png.flaticon.com/128/4521/4521516.png" alt="Recetas">RECETAS</a>
+            <a href="{% url 'proveedor' %}"><img src="https://cdn-icons-png.flaticon.com/128/10839/10839198.png" alt="Proveedores">PROVEEDORES</a>
+            <a href="{% url 'reporte' %}"><img src="https://cdn-icons-png.flaticon.com/128/1055/1055644.png" alt="Reportes">REPORTES</a>
+            <a href="{% url 'alerta' %}"><img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Alertas">ALERTAS</a>
+            <a href="{% url 'venta' %}"><img src="https://cdn-icons-png.flaticon.com/128/9362/9362302.png" alt="Ventas">VENTAS</a>
+        </div>
+        {% if usuario %}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Cerrar sesión</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        <h1>Listado de Productos</h1>
+        <div class="buttons-top">
+            <a href="{% url 'crear_producto' %}">Registrar Producto</a>
+            <a href="{% url 'dashboard' %}">Volver al Menú</a>
+        </div>
+
+        <table>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Vencimiento</th>
+                <th>IVA</th>
+                <th>Inventario</th>
+                <th>Cliente</th>
+                <th>Acciones</th>
+            </tr>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.codigo_barra }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.descripcion }}</td>
+                <td>{{ producto.precio_unitario }}</td>
+                <td>{{ producto.stock }}</td>
+                <td>{{ producto.fecha_vencimiento }}</td>
+                <td>{{ producto.iva }}</td>
+                <td>{{ producto.id_inventario }}</td>
+                <td>{{ producto.ci_cliente }}</td>
+                <td>
+                    <a href="{% url 'editar_producto' producto.codigo_barra %}">Editar</a>
+                    <a href="{% url 'eliminar_producto' producto.codigo_barra %}">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" style="text-align:center;">No hay productos registrados.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
