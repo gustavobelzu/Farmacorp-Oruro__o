@@ -157,10 +157,12 @@ SITE_ID = 1
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-LOGIN_URL = "account_login"
-LOGOUT_URL = "account_logout"
-#LOGIN_REDIRECT_URL = "farmacia"
-#LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = '/usuarios/login/'
+LOGOUT_URL = '/usuarios/logout/'
+LOGIN_REDIRECT_URL = '/farmacia/'
+LOGOUT_REDIRECT_URL = '/usuarios/login/'
+
+
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 

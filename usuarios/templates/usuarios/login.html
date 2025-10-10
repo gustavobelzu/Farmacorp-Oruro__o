@@ -1,0 +1,71 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido de nuevo</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="logo-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+             alt="Logo Usuario" style="width: 120px; margin-bottom: 20px;">
+    </div>
+
+    <h1>Bienvenido de nuevo</h1>
+    <p>Por favor, inicia sesión:</p>
+
+    <div class="form-container">
+        {% if bloqueo %}
+            <p style="color:red; font-weight:bold;">
+                ⛔ Demasiados intentos. Espera <span id="tiempo">{{ tiempo_restante }}</span> segundos para volver a intentar.
+            </p>
+            <form method="post" id="loginForm" style="display:none;">
+                {% csrf_token %}
+                <div>
+                    <label for="id_username">Usuario:</label>
+                    <input type="text" name="username" id="id_username" required>
+                </div>
+                <div>
+                    <label for="id_password">Contraseña:</label>
+                    <input type="password" name="password" id="id_password" required>
+                </div>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+            <script>
+                let tiempo = {{ tiempo_restante }};
+                const tiempoSpan = document.getElementById('tiempo');
+                const form = document.getElementById('loginForm');
+
+                const intervalo = setInterval(() => {
+                    tiempo -= 1;
+                    tiempoSpan.textContent = tiempo;
+                    if(tiempo <= 0) {
+                        clearInterval(intervalo);
+                        form.style.display = 'block';      // Habilitar formulario
+                        tiempoSpan.parentElement.style.display = 'none'; // Ocultar mensaje
+                    }
+                }, 1000);
+            </script>
+        {% else %}
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                {% if intentos_restantes is not none and intentos_restantes < 3 %}
+                    <p style="color:orange; font-weight:bold;">
+                        Te quedan {{ intentos_restantes }} intento{{ intentos_restantes|pluralize }} antes de que se bloquee.
+                    </p>
+                {% endif %}
+                <div>
+                    <label for="id_username">Usuario:</label>
+                    <input type="text" name="username" id="id_username" required>
+                </div>
+                <div>
+                    <label for="id_password">Contraseña:</label>
+                    <input type="password" name="password" id="id_password" required>
+                </div>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
