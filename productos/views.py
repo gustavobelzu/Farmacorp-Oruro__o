@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Producto
 from .forms import ProductoForm
 from django.contrib import messages
+from django.http import JsonResponse
 
 def listar_productos(request):
     productos = Producto.objects.all()
@@ -48,3 +49,7 @@ def eliminar_producto(request, codigo_barra):
         'productos': productos,
         'producto_eliminado': producto_eliminado
     })
+
+def verificar_producto(request, codigo):
+    existe = Producto.objects.filter(codigo_barra=codigo).exists()
+    return JsonResponse({'existe': existe})
