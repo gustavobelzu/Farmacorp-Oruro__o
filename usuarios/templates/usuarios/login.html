@@ -16,6 +16,13 @@
     <p>Por favor, inicia sesión:</p>
 
     <div class="form-container">
+        <!-- Mensajes de error / info -->
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red; font-weight:bold;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
         {% if bloqueo %}
             <p style="color:red; font-weight:bold;">
                 ⛔ Demasiados intentos. Espera <span id="tiempo">{{ tiempo_restante }}</span> segundos para volver a intentar.
@@ -24,7 +31,8 @@
                 {% csrf_token %}
                 <div>
                     <label for="id_username">Usuario:</label>
-                    <input type="text" name="username" id="id_username" required>
+                    <input type="text" name="username" id="id_username" required
+                           value="{{ form_data.username }}">
                 </div>
                 <div>
                     <label for="id_password">Contraseña:</label>
@@ -42,8 +50,8 @@
                     tiempoSpan.textContent = tiempo;
                     if(tiempo <= 0) {
                         clearInterval(intervalo);
-                        form.style.display = 'block';      // Habilitar formulario
-                        tiempoSpan.parentElement.style.display = 'none'; // Ocultar mensaje
+                        form.style.display = 'block';
+                        tiempoSpan.parentElement.style.display = 'none';
                     }
                 }, 1000);
             </script>
@@ -57,7 +65,8 @@
                 {% endif %}
                 <div>
                     <label for="id_username">Usuario:</label>
-                    <input type="text" name="username" id="id_username" required>
+                    <input type="text" name="username" id="id_username" required
+                           value="{{ form_data.username }}">
                 </div>
                 <div>
                     <label for="id_password">Contraseña:</label>

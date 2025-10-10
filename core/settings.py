@@ -146,9 +146,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'dashboard'      # O usa '/farmacia/' si prefieres la URL
-LOGOUT_REDIRECT_URL = '/farmacia/login/'
-
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
@@ -161,6 +158,7 @@ LOGIN_URL = '/usuarios/login/'
 LOGOUT_URL = '/usuarios/logout/'
 LOGIN_REDIRECT_URL = '/farmacia/'
 LOGOUT_REDIRECT_URL = '/usuarios/login/'
+
 
 
 

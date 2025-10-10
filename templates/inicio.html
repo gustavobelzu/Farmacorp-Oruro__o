@@ -27,12 +27,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            flex: 1; /* Ocupa todo el espacio disponible para centrar */
-            justify-content: center; /* Centra logo + título */
+            flex: 1;
+            justify-content: center;
         }
 
         .logo-titulo img {
-            width: 110px; /* Logo más grande */
+            width: 110px;
             height: auto;
         }
 
@@ -44,7 +44,7 @@
 
         /* === BOTÓN CERRAR SESIÓN === */
         .header form {
-            margin-left: auto; /* Empuja el botón a la derecha */
+            margin-left: auto;
             display: flex;
         }
 
@@ -123,8 +123,8 @@
             text-align: center;
             padding: 25px 10px 15px 10px;
             transition: box-shadow 0.2s, transform 0.2s;
-            text-decoration: none; /* sin subrayado */
-            border: 2px solid #90caf9; /* borde celeste */
+            text-decoration: none;
+            border: 2px solid #90caf9;
         }
 
         .menu-item:hover {
@@ -152,7 +152,6 @@
         @media (max-width: 500px) {
             .menu-grid { grid-template-columns: 1fr; }
         }
-
         @media (max-width: 600px) {
             .header {
                 flex-direction: column;
@@ -164,12 +163,8 @@
                 margin-top: 10px;
                 position: static;
             }
-            .titulo {
-                font-size: 2em;
-            }
-            .logo-titulo img {
-                width: 90px;
-            }
+            .titulo { font-size: 2em; }
+            .logo-titulo img { width: 90px; }
         }
     </style>
 </head>
@@ -179,7 +174,8 @@
             <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacorp">
             <div class="titulo">FARMACORP</div>
         </div>
-        {% if usuario %}
+
+        {% if request.session.usuario_nombre %}
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="logout-btn">Cerrar sesión</button>
@@ -187,17 +183,18 @@
         {% endif %}
     </div>    
 
-    {% if usuario %}
+    {% if request.session.usuario_nombre %}
     <div class="usuario-bar">
         <img src="https://cdn-icons-png.flaticon.com/128/1415/1415499.png" alt="Usuario">
         <span>Bienvenido de Nuevo</span>
         <div class="usuario-datos">
-            <b>{{ usuario.username }}</b>
+            <b>{{ request.session.usuario_nombre }}</b>
             <div class="fecha">{{ now|date:"d/m/Y H:i" }}</div>
         </div>
     </div>
     <p>Fecha actual: {% now "d/m/Y" %}</p>
     {% endif %}
+
     <div class="menu-grid">
         <a href="{% url 'sucursal' %}" class="menu-item">
             <img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="Sucursal">
@@ -207,7 +204,6 @@
             <img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">
             <span>PRODUCTOS</span>
         </a>
-
         <a href="{% url 'inventario' %}" class="menu-item">
             <img src="https://cdn-icons-png.flaticon.com/128/2825/2825867.png" alt="Inventario">
             <span>INVENTARIO</span>
