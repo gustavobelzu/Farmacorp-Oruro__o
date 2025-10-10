@@ -23,18 +23,45 @@ def crear_producto(request):
     })
 
 def editar_producto(request, codigo_barra):
+    # Obtenemos el producto existente
     producto = get_object_or_404(Producto, codigo_barra=codigo_barra)
+    producto_modificado = False
+
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=producto)
         if form.is_valid():
-            form.save()
-            return render(request, 'productos/editar_producto.html', {
-                'form': form,
-                'producto_modificado': True  # 👈 enviamos indicador al template
-            })
+            nuevo_codigo = form.cleaned_data['codigo_barra']
+
+            if nuevo_codigo != producto.codigo_barra:
+                # Verificar que no exista otro producto con el mismo código
+                if Producto.objects.filter(codigo_barra=nuevo_codigo).exclude(pk=producto.pk).exists():
+                    messages.error(request, f'El código "{nuevo_codigo}" ya existe.')
+                else:
+                    # Actualizar manualmente todos los campos, incluyendo la PK
+                    producto.codigo_barra = nuevo_codigo
+                    producto.nombre = form.cleaned_data['nombre']
+                    producto.descripcion = form.cleaned_data['descripcion']
+                    producto.estado = form.cleaned_data['estado']
+                    producto.precio_unitario = form.cleaned_data['precio_unitario']
+                    producto.stock = form.cleaned_data['stock']
+                    producto.fecha_vencimiento = form.cleaned_data['fecha_vencimiento']
+                    producto.iva = form.cleaned_data['iva']
+                    producto.id_inventario = form.cleaned_data['id_inventario']
+                    producto.ci_cliente = form.cleaned_data['ci_cliente']
+                    producto.save()
+                    producto_modificado = True
+            else:
+                # Código no cambió, actualizar otros campos normalmente
+                form.save()
+                producto_modificado = True
     else:
         form = ProductoForm(instance=producto)
-    return render(request, 'productos/editar_producto.html', {'form': form})
+
+    return render(request, 'productos/editar_producto.html', {
+        'form': form,
+        'producto_modificado': producto_modificado
+    })
+
 
 def eliminar_producto(request, codigo_barra):
     producto_eliminado = False
