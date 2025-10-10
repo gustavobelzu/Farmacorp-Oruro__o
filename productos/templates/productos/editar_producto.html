@@ -70,7 +70,11 @@
         <form method="post">
             {% csrf_token %}
             
-            <div><label>Código de Barra</label>{{ form.codigo_barra }}</div>
+           <div>
+    <label>Código de Barra</label>
+    {{ form.codigo_barra }}
+</div>
+
             <div><label>Nombre</label>{{ form.nombre }}</div>
             <div><label>Descripción</label>{{ form.descripcion }}</div>
             <div><label>Estado</label>{{ form.estado }}</div>
