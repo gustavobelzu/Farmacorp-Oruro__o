@@ -5,39 +5,110 @@
     <meta charset="UTF-8">
     <title>Bienvenido de nuevo</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        /* ===== Body ===== */
+        body {
+            font-family: Arial, sans-serif;
+            background: #e3f2fd;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* ===== Form Container ===== */
+        .form-container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== Logo ===== */
+        .logo-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== Inputs ===== */
+        .form-container form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container label {
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #0d47a1;
+        }
+
+        /* ===== Messages ===== */
+        p.error {
+            color: red;
+            font-size: 0.9em;
+            margin: 5px 0 0 0;
+        }
+
+        p.warning {
+            color: orange;
+            font-size: 0.9em;
+            margin: 5px 0 0 0;
+        }
+
+        /* ===== Countdown ===== */
+        #tiempo {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="logo-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
-             alt="Logo Usuario" style="width: 120px; margin-bottom: 20px;">
-    </div>
-
-    <h1>Bienvenido de nuevo</h1>
-    <p>Por favor, inicia sesión:</p>
-
     <div class="form-container">
-        <!-- Mensajes de error / info -->
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color:red; font-weight:bold;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Logo Usuario">
+        </div>
 
         {% if bloqueo %}
-            <p style="color:red; font-weight:bold;">
-                ⛔ Demasiados intentos. Espera <span id="tiempo">{{ tiempo_restante }}</span> segundos para volver a intentar.
-            </p>
+            <p class="error">⛔ Demasiados intentos. Espera <span id="tiempo">{{ tiempo_restante }}</span> segundos para volver a intentar.</p>
             <form method="post" id="loginForm" style="display:none;">
                 {% csrf_token %}
-                <div>
-                    <label for="id_username">Usuario:</label>
-                    <input type="text" name="username" id="id_username" required
-                           value="{{ form_data.username }}">
-                </div>
-                <div>
-                    <label for="id_password">Contraseña:</label>
-                    <input type="password" name="password" id="id_password" required>
-                </div>
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" id="id_username" value="{{ form_data.username }}" required>
+
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" id="id_password" required>
+
                 <button type="submit">Iniciar sesión</button>
             </form>
             <script>
@@ -48,9 +119,9 @@
                 const intervalo = setInterval(() => {
                     tiempo -= 1;
                     tiempoSpan.textContent = tiempo;
-                    if(tiempo <= 0) {
+                    if (tiempo <= 0) {
                         clearInterval(intervalo);
-                        form.style.display = 'block';
+                        form.style.display = 'flex';
                         tiempoSpan.parentElement.style.display = 'none';
                     }
                 }, 1000);
@@ -58,20 +129,23 @@
         {% else %}
             <form method="post" id="loginForm">
                 {% csrf_token %}
+
                 {% if intentos_restantes is not none and intentos_restantes < 3 %}
-                    <p style="color:orange; font-weight:bold;">
-                        Te quedan {{ intentos_restantes }} intento{{ intentos_restantes|pluralize }} antes de que se bloquee.
-                    </p>
+                    <p class="warning">Te quedan {{ intentos_restantes }} intento{{ intentos_restantes|pluralize }} antes de que se bloquee.</p>
                 {% endif %}
-                <div>
-                    <label for="id_username">Usuario:</label>
-                    <input type="text" name="username" id="id_username" required
-                           value="{{ form_data.username }}">
-                </div>
-                <div>
-                    <label for="id_password">Contraseña:</label>
-                    <input type="password" name="password" id="id_password" required>
-                </div>
+
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" id="id_username" value="{{ form_data.username }}" required>
+                {% if usuario_no_encontrado %}
+                    <p class="error">Usuario no encontrado</p>
+                {% endif %}
+
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" id="id_password" required>
+                {% if password_incorrecta %}
+                    <p class="error">Contraseña incorrecta</p>
+                {% endif %}
+
                 <button type="submit">Iniciar sesión</button>
             </form>
         {% endif %}

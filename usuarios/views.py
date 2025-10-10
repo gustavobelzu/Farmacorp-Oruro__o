@@ -1,12 +1,13 @@
-# usuarios/views.py
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Usuario
 from django.utils import timezone
 from datetime import timedelta
+from .models import Usuario
+from django.contrib import messages
+
+
 
 MAX_INTENTOS = 3
-TIEMPO_BLOQUEO = 10  # segundos
+TIEMPO_BLOQUEO = 5  # segundos de bloqueo
 
 def login_view(request):
     # Inicializar sesión
@@ -19,7 +20,7 @@ def login_view(request):
     bloqueo_hasta = request.session.get('bloqueo_hasta')
     intentos_restantes = MAX_INTENTOS - request.session['intentos']
 
-    # Verificar bloqueo activo
+    # Verificar bloqueo
     if bloqueo_hasta:
         bloqueo_hasta = timezone.datetime.fromisoformat(bloqueo_hasta)
         if ahora < bloqueo_hasta:
@@ -35,6 +36,7 @@ def login_view(request):
 
     form_data = {'username': ''}
     usuario_no_encontrado = False
+    password_incorrecta = False
 
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
@@ -47,7 +49,6 @@ def login_view(request):
             request.session['intentos'] += 1
             intentos_restantes = MAX_INTENTOS - request.session['intentos']
             usuario_no_encontrado = True
-
             if request.session['intentos'] >= MAX_INTENTOS:
                 request.session['bloqueo_hasta'] = (ahora + timedelta(seconds=TIEMPO_BLOQUEO)).isoformat()
                 request.session['intentos'] = 0
@@ -56,26 +57,17 @@ def login_view(request):
                     'tiempo_restante': TIEMPO_BLOQUEO,
                     'form_data': form_data
                 })
-
             return render(request, "usuarios/login.html", {
                 'intentos_restantes': intentos_restantes,
                 'form_data': form_data,
-                'usuario_no_encontrado': usuario_no_encontrado
+                'usuario_no_encontrado': usuario_no_encontrado,
+                'password_incorrecta': password_incorrecta
             })
 
-        # Verificar contraseña
-        if usuario.check_password(password):
-            # Login exitoso
-            request.session['usuario_id'] = usuario.id
-            request.session['usuario_nombre'] = usuario.username
-            request.session['intentos'] = 0
-            request.session['bloqueo_hasta'] = None
-            return redirect('dashboard')
-        else:
+        if not usuario.check_password(password):
             request.session['intentos'] += 1
             intentos_restantes = MAX_INTENTOS - request.session['intentos']
-            messages.error(request, "Contraseña incorrecta")
-
+            password_incorrecta = True
             if request.session['intentos'] >= MAX_INTENTOS:
                 request.session['bloqueo_hasta'] = (ahora + timedelta(seconds=TIEMPO_BLOQUEO)).isoformat()
                 request.session['intentos'] = 0
@@ -84,22 +76,31 @@ def login_view(request):
                     'tiempo_restante': TIEMPO_BLOQUEO,
                     'form_data': form_data
                 })
-
             return render(request, "usuarios/login.html", {
                 'intentos_restantes': intentos_restantes,
-                'form_data': form_data
+                'form_data': form_data,
+                'usuario_no_encontrado': usuario_no_encontrado,
+                'password_incorrecta': password_incorrecta
             })
 
-    # Render inicial
+        # Login exitoso
+        request.session['usuario_id'] = usuario.id
+        request.session['usuario_nombre'] = usuario.username
+        request.session['intentos'] = 0
+        request.session['bloqueo_hasta'] = None
+        return redirect('dashboard')
+
     return render(request, "usuarios/login.html", {
         'intentos_restantes': intentos_restantes,
         'form_data': form_data,
-        'usuario_no_encontrado': usuario_no_encontrado
+        'usuario_no_encontrado': usuario_no_encontrado,
+        'password_incorrecta': password_incorrecta
     })
+
 
 
 def logout_view(request):
     """Cerrar sesión y volver al login"""
     request.session.flush()
-    messages.info(request, "Has cerrado sesión correctamente.")
+    #messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
