@@ -7,9 +7,6 @@ def listar_productos(request):
     productos = Producto.objects.all()
     return render(request, 'productos/producto.html', {'productos': productos})
 
-from django.shortcuts import render, redirect
-from .forms import ProductoForm
-
 def crear_producto(request):
     form = ProductoForm(request.POST or None)
     producto_guardado = False  # ← indicador de éxito
@@ -30,8 +27,10 @@ def editar_producto(request, codigo_barra):
         form = ProductoForm(request.POST, instance=producto)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Producto actualizado correctamente')
-            return redirect('producto_listar')  # redirige a la lista
+            return render(request, 'productos/editar_producto.html', {
+                'form': form,
+                'producto_modificado': True  # 👈 enviamos indicador al template
+            })
     else:
         form = ProductoForm(instance=producto)
     return render(request, 'productos/editar_producto.html', {'form': form})
