@@ -260,12 +260,37 @@
             }
         }).then((result) => {
             if(result.isConfirmed){
-                const codigo = result.value;
-                window.location.href = `/productos/editar/${codigo}/`;
+                const codigo = result.value.trim();
+
+                // 🔍 Verificar si el producto existe
+                fetch(`/productos/verificar/${codigo}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.existe) {
+                            // Redirigir a la página de edición
+                            window.location.href = `/productos/editar/${codigo}/`;
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Producto no encontrado',
+                                text: `No existe ningún producto con el código "${codigo}".`,
+                                confirmButtonColor: '#3085d6'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ocurrió un problema al verificar el producto.',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    });
             }
         });
     }
-    
+   
     </script>
         {% if producto_eliminado %}
     <script>
