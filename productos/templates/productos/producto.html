@@ -32,20 +32,80 @@
             margin-bottom: 20px;
         }
         .top-buttons a {
-            color: white;
-            background-color: #64b5f6;
-            padding: 6px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 12px;
-            transition: background 0.2s;
-        }
-        .top-buttons a:hover { background-color: #1e88e5; }
-        .top-buttons a.delete { background-color: #e53935; }
-        .top-buttons a.delete:hover { background-color: #c62828; }
-        .top-buttons a.edit { background-color: #fbc02d; color: black; }
-        .top-buttons a.edit:hover { background-color: #f9a825; }
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        background-color: #64b5f6;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 13px;
+        min-width: 100px;   /* evita que el texto se desborde */
+        text-align: center;
+        box-sizing: border-box;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .top-buttons a:hover {
+        background-color: #1e88e5;
+        transform: scale(1.03);
+    }
+
+    .top-buttons a.delete {
+        background-color: #e53935;
+        min-width: 110px; /* un poco más ancho solo para “Eliminar” */
+    }
+
+    .top-buttons a.delete:hover {
+        background-color: #c62828;
+    }
+
+    .top-buttons a.edit {
+        background-color: #fbc02d;
+        color: black;
+    }
+
+    .top-buttons a.edit:hover {
+        background-color: #f9a825;
+    }
+    /* === Personalización del cuadro SweetAlert2 === */
+    .swal2-popup {
+        border-radius: 12px;
+        padding: 25px 20px;
+    }
+
+    .swal2-input {
+        width: 80% !important;      /* ancho del cuadro de texto */
+        height: 40px !important;    /* alto del cuadro de texto */
+        font-size: 15px;
+        border: 2px solid #2196f3;
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+
+    .swal2-title {
+        color: #0d47a1;
+        font-weight: bold;
+    }
+
+    .swal2-confirm {
+        background-color: #2196f3 !important;
+        color: white !important;
+        border-radius: 6px !important;
+        font-weight: bold;
+        padding: 8px 18px !important;
+    }
+
+    .swal2-cancel {
+        background-color: #e53935 !important;
+        color: white !important;
+        border-radius: 6px !important;
+        font-weight: bold;
+        padding: 8px 18px !important;
+    }
+
     </style>
 </head>
 <body>
@@ -119,35 +179,35 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     function confirmarEliminacion() {
-        Swal.fire({
-            title: 'Eliminar Producto',
-            input: 'text',
-            inputLabel: 'Ingrese el código del producto a eliminar',
-            inputPlaceholder: 'Código del producto',
-            showCancelButton: true,
-            confirmButtonText: 'Aceptar',
-            cancelButtonText: 'Cancelar',
-            inputValidator: (value) => {
-                if (!value) return 'Debes ingresar un código';
-            }
-        }).then((result) => {
-            if(result.isConfirmed){
-                const codigo = result.value;
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/productos/eliminar/${codigo}/`;
+    Swal.fire({
+        title: 'Eliminar Producto',
+        input: 'text',
+        inputLabel: 'Ingrese el código del producto a eliminar',
+        inputPlaceholder: 'Código del producto',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value) return 'Debes ingresar un código';
+        }
+    }).then((result) => {
+                if(result.isConfirmed){
+                    const codigo = result.value;
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/productos/eliminar/${codigo}/`;
 
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';
-                csrfInput.value = '{{ csrf_token }}';
-                form.appendChild(csrfInput);
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = '{{ csrf_token }}';
+                    form.appendChild(csrfInput);
 
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
-    }
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
 
     function editarProducto() {
         Swal.fire({
@@ -168,6 +228,20 @@
             }
         });
     }
+    
     </script>
+        {% if producto_eliminado %}
+    <script>
+    Swal.fire({
+        icon: 'success',
+        title: '✅ Producto eliminado correctamente',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6'
+    }).then(() => {
+        window.location.href = "{% url 'producto_listar' %}";
+    });
+    </script>
+    {% endif %}
+
 </body>
 </html>

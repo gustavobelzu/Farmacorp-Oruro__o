@@ -220,7 +220,7 @@
     </div>
 
     <!-- Modal de éxito -->
-    {% if messages %}
+    {% if producto_guardado %}
     <div id="successModal" class="modal" style="display: block;">
         <div class="modal-content">
             <h2>✅ Producto guardado correctamente</h2>
@@ -230,6 +230,8 @@
         </div>
     </div>
     {% endif %}
+
+
 
     <!-- Script -->
     <script>
@@ -259,13 +261,15 @@
             }
         });
 
-        // Cierra modal de éxito
+        // Cierra modal de éxito y redirige al listado
         const okBtn = document.getElementById('ok-btn');
         if (okBtn) {
             okBtn.addEventListener('click', () => {
-                document.getElementById('successModal').style.display = 'none';
+                window.location.href = "{% url 'producto_listar' %}";
             });
         }
+
+
     </script>
 </body>
 </html>
