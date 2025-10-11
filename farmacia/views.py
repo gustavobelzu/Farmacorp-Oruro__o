@@ -49,7 +49,7 @@ def reporte_view(request):
 
 @login_required_custom
 def cliente_view(request):
-    return render(request, "clientes/cliente.html")
+    return render(request, "cliente.html")
 
 
 @login_required_custom
