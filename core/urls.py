@@ -4,15 +4,10 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # ✅ Redirige "/" al login de usuarios
-    path('', lambda request: redirect('login')),  # usa el name de la url
-    path('clientes/', include('clientes.urls')),
+    path('', lambda request: redirect('login')),  # Redirige al login
+    path('clientes/', include('clientes.urls')),  # ✅ Aquí usamos /clientes/
     path('farmacia/', include('farmacia.urls')),
     path('usuarios/', include('usuarios.urls')),
     path('productos/', include('productos.urls')),
-   
-
-
 ]
-
 
