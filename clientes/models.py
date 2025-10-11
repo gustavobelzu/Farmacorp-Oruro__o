@@ -13,6 +13,11 @@ class Cliente(models.Model):
         blank=True,
         null=True
     )
+    class Meta:
+        db_table = 'cliente'
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+
 
     def __str__(self):
         return f"{self.nombre} ({self.ci_cliente})"
