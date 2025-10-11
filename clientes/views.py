@@ -5,7 +5,7 @@ from django.contrib import messages
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
-    return render(request, 'clientes/listar_clientes.html', {'clientes': clientes})
+    return render(request, 'clientes/cliente.html', {'clientes': clientes})
 
 def registrar_cliente(request):
     if request.method == 'POST':
