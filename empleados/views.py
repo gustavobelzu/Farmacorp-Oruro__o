@@ -4,7 +4,8 @@ from .models import Empleado
 from .forms import EmpleadoForm
 from django.contrib import messages
 from django.http import JsonResponse
-from .models import Farmaceutico
+from .models import Empleado, Farmaceutico, Administrador, EncargadoInventario
+
 
 
 
@@ -44,36 +45,47 @@ def editar_empleado(request, ci):
         if form.is_valid():
             nuevo_ci = form.cleaned_data['ci']
 
-            if nuevo_ci != empleado.ci:
-                # Verificar que no exista otro empleado con el mismo CI
-                if Empleado.objects.filter(ci=nuevo_ci).exclude(pk=empleado.pk).exists():
-                    messages.error(request, f'El CI "{nuevo_ci}" ya existe.')
-                else:
-                    # Actualizamos manualmente todos los campos, incluyendo la PK
-                    empleado.ci = nuevo_ci
-                    empleado.nombre = form.cleaned_data['nombre']
-                    empleado.telefono = form.cleaned_data['telefono']
-                    empleado.salario = form.cleaned_data['salario']
-                    empleado.cargo = form.cleaned_data['cargo']
-                    empleado.sexo = form.cleaned_data['sexo']
-                    empleado.estado = form.cleaned_data['estado']
-                    empleado.turno = form.cleaned_data['turno']
-                    empleado.fecha_ingreso = form.cleaned_data['fecha_ingreso']
-                    empleado.fecha_salida = form.cleaned_data['fecha_salida']
-                    empleado.id_farmacia = form.cleaned_data['id_farmacia']
-                    empleado.save()
-                    empleado_modificado = True
+            # --- Verificar duplicado de CI si cambió ---
+            if nuevo_ci != empleado.ci and Empleado.objects.filter(ci=nuevo_ci).exclude(pk=empleado.pk).exists():
+                messages.error(request, f'El CI "{nuevo_ci}" ya existe.')
             else:
-                # CI no cambió, actualizar normalmente
-                form.save()
+                # Guardamos los datos principales del empleado
+                empleado = form.save(commit=False)
+                empleado.ci = nuevo_ci
+                empleado.save()
+
+                # === Manejo del tipo de empleado ===
+                tipo = request.POST.get('tipo_empleado', '').lower()
+
+                # Limpiar roles previos (solo puede tener uno)
+                Farmaceutico.objects.filter(empleado=empleado).delete()
+                Administrador.objects.filter(empleado=empleado).delete()
+                EncargadoInventario.objects.filter(empleado=empleado).delete()
+
+                # Crear según el tipo seleccionado
+                if tipo == 'farmaceutico':
+                    Farmaceutico.objects.create(
+                        empleado=empleado,
+                        matricula=request.POST.get('matricula'),
+                        especialidad=request.POST.get('especialidad')
+                    )
+                elif tipo == 'administrador':
+                    Administrador.objects.create(empleado=empleado)
+                elif tipo == 'encargado inventario':
+                    EncargadoInventario.objects.create(empleado=empleado)
+                # Si eliges otro tipo, no se crea ningún modelo adicional
+
                 empleado_modificado = True
+
     else:
         form = EmpleadoForm(instance=empleado)
 
     return render(request, 'empleados/editar_empleado.html', {
         'form': form,
-        'empleado_modificado': empleado_modificado
+        'empleado_modificado': empleado_modificado,
+        'empleado': empleado,
     })
+
 
 # ======================
 # Eliminar Empleado
