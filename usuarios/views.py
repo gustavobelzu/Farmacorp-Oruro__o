@@ -88,7 +88,7 @@ def login_view(request):
         request.session['usuario_nombre'] = usuario.username
         request.session['intentos'] = 0
         request.session['bloqueo_hasta'] = None
-        return redirect('dashboard')
+        return redirect('farmacia:dashboard')
 
     return render(request, "usuarios/login.html", {
         'intentos_restantes': intentos_restantes,
@@ -102,5 +102,5 @@ def login_view(request):
 def logout_view(request):
     """Cerrar sesión y volver al login"""
     request.session.flush()
-    #messages.info(request, "Has cerrado sesión correctamente.")
-    return redirect('login')
+    return redirect('usuarios:login')  # <-- namespace agregado
+

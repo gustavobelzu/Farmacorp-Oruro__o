@@ -1,14 +1,13 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
-from usuarios import views as usuarios_views  # Import correcto desde la app usuarios
+
+app_name = 'farmacia'
 
 urlpatterns = [
+    # Dashboard principal
     path('', views.dashboard, name='dashboard'),
-    path('login/', usuarios_views.login_view, name='login'),
-    path('logout/', usuarios_views.logout_view, name='logout'),
-    # Agrega rutas para cada módulo (puedes crear vistas vacías por ahora)
-    path('', views.dashboard, name='dashboard'),
+
+    # Vistas de farmacia
     path('farmacia/', views.farmacia_view, name='farmacia'),
     path('usuario/', views.usuario_view, name='usuario'),
     path('sucursal/', views.sucursal_view, name='sucursal'),
