@@ -176,7 +176,8 @@
         </div>
 
         {% if request.session.usuario_nombre %}
-        <form method="post" action="{% url 'logout' %}">
+        <form method="post" action="{% url 'usuarios:logout' %}">
+
             {% csrf_token %}
             <button type="submit" class="logout-btn">Cerrar sesión</button>
         </form>
