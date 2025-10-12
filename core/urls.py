@@ -9,5 +9,7 @@ urlpatterns = [
     path('farmacia/', include('farmacia.urls')),
     path('usuarios/', include('usuarios.urls')),
     path('productos/', include('productos.urls')),
+    path('empleados/', include('empleados.urls', namespace='empleados')),  # ← Agregado para empleados
+
 ]
 
