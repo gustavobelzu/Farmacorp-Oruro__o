@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>FARMACIAS - FARMACORP</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        body { font-family: Arial,sans-serif; margin:0; padding:0; display:flex; background:#e3f2fd; }
+        .sidebar { width:250px; background:#2196f3; color:#fff; height:100vh; display:flex; flex-direction:column; position:fixed; }
+        .sidebar-header { text-align:center; padding:20px 10px; border-bottom:2px solid #1976d2; }
+        .sidebar-header img { width:80px; height:auto; }
+        .sidebar-header h2 { margin:10px 0 0; font-size:1.5em; }
+        .menu { flex:1; display:flex; flex-direction:column; padding:20px 0; }
+        .menu a { display:flex; align-items:center; padding:12px 20px; color:white; text-decoration:none; font-weight:bold; transition:background 0.2s; }
+        .menu a img { width:28px; margin-right:12px; }
+        .menu a:hover { background:#1e88e5; }
+        .main-content { margin-left:250px; flex:1; padding:20px 40px; }
+        h1 { text-align:center; color:#0d47a1; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:10px; border:1px solid #1976d2; text-align:left; }
+        th { background:#2196f3; color:white; }
+
+        .top-buttons { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+        .top-buttons a {
+            display:inline-flex; align-items:center; justify-content:center;
+            color:white; background-color:#64b5f6;
+            padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:bold;
+            font-size:13px; min-width:100px; transition:background 0.2s, transform 0.1s;
+        }
+        .top-buttons a:hover { background-color:#1e88e5; transform:scale(1.03); }
+        .top-buttons a.delete { background-color:#e53935; min-width:110px; }
+        .top-buttons a.delete:hover { background-color:#c62828; }
+        .top-buttons a.edit { background-color:#fbc02d; color:black; }
+        .top-buttons a.edit:hover { background-color:#f9a825; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo">
+            <h2>FARMACORP</h2>
+        </div>
+        <div class="menu">
+            <a href="{% url 'listar_sucursal' %}"><img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="">SUCURSAL</a>
+            <a href="{% url 'listar_farmacia' %}" style="background:#1e88e5"><img src="https://cdn-icons-png.flaticon.com/128/9430/9430863.png" alt="">FARMACIAS</a>
+            <a href="{% url 'producto_listar' %}"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="">PRODUCTOS</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>🏥 Listado de Farmacias</h1>
+
+        <div class="top-buttons">
+            <a href="{% url 'crear_farmacia' %}">Crear</a>
+            <a href="#" class="edit" onclick="editarFarmacia()">Editar</a>
+            <a href="#" class="delete" onclick="eliminarFarmacia()">Eliminar</a>
+            <a href="{% url 'listar_sucursal' %}">Volver a Sucursales</a>
+        </div>
+
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Razón Legal</th>
+                <th>Sucursal</th>
+            </tr>
+            {% for farmacia in farmacias %}
+            <tr>
+                <td>{{ farmacia.nombre_farmacia }}</td>
+                <td>{{ farmacia.razon_legal }}</td>
+                <td>{{ farmacia.id_sucursal.nombre }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center;">No hay farmacias registradas.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
