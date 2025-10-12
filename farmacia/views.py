@@ -1,4 +1,48 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+
+# farmacia/views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Farmacia, Sucursal
+from .forms import FarmaciaForm, SucursalForm
+from django.contrib import messages
+from django.http import JsonResponse
+
+def listar_farmacias(request):
+    farmacias = Farmacia.objects.all()
+    return render(request, 'farmacia/farmacia.html', {'farmacias': farmacias, 'usuario': request.user})
+
+def crear_farmacia(request):
+    if request.method == 'POST':
+        form = FarmaciaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('farmacia:listar_farmacias')
+    else:
+        form = FarmaciaForm()
+    return render(request, 'farmacia/crear_farmacia.html', {'form': form})
+
+def editar_farmacia(request, id):
+    farmacia = get_object_or_404(Farmacia, id=id)
+    if request.method == 'POST':
+        form = FarmaciaForm(request.POST, instance=farmacia)
+        if form.is_valid():
+            form.save()
+            return redirect('farmacia:listar_farmacias')
+    else:
+        form = FarmaciaForm(instance=farmacia)
+    return render(request, 'farmacia/editar_farmacia.html', {'form': form, 'farmacia': farmacia})
+
+def eliminar_farmacia(request, id):
+    farmacia = get_object_or_404(Farmacia, id=id)
+    if request.method == 'POST':
+        farmacia.delete()
+        return redirect('farmacia:listar_farmacias')
+    return render(request, 'farmacia/confirmar_eliminacion.html', {'farmacia': farmacia})
+
+def verificar_farmacia(request, id):
+    existe = Farmacia.objects.filter(id=id).exists()
+    return JsonResponse({'existe': existe})
+
 
 # Decorador personalizado para proteger vistas según tu sesión
 def login_required_custom(view_func):
