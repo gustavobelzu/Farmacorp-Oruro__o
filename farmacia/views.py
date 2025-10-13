@@ -79,12 +79,10 @@ def almacen_view(request):
 
 # Listar farmacias de una sucursal
 @login_required_custom
-def listar_farmacia(request, id):
-    sucursal = get_object_or_404(Sucursal, id=id)
-    farmacias = Farmacia.objects.filter(id_sucursal=sucursal)
+def listar_farmacia(request):
+    farmacias = Farmacia.objects.all()
     return render(request, 'farmacia/listar_farmacia.html', {
-        'farmacias': farmacias,
-        'sucursal': sucursal
+        'farmacias': farmacias
     })
 
 # 🔹 Crear farmacia
@@ -124,13 +122,12 @@ def editar_farmacia(request, id):
 
 # Eliminar farmacia
 @login_required_custom
-def eliminar_farmacia(request, id):
-    farmacia = get_object_or_404(Farmacia, id=id)
+def eliminar_farmacia(request, id_farmacia):
+    farmacia = get_object_or_404(Farmacia, id=id_farmacia)
     sucursal_id = farmacia.id_sucursal.id
     farmacia.delete()
     messages.success(request, '🗑️ Farmacia eliminada correctamente.')
-    return redirect('farmacia:listar_farmacia', id=sucursal_id)
-
+    return redirect('farmacia:listar_farmacia')
 # -------------------- AJAX: Verificar farmacia por nombre --------------------
 # 🔹 Verificar si el nombre de la farmacia ya existe (AJAX)
 @login_required_custom

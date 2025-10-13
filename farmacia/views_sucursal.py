@@ -18,7 +18,7 @@ def crear_sucursal(request):
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Sucursal registrada correctamente.')
-            return redirect('listar_sucursal')
+        return redirect('sucursal:listar_sucursal')
     else:
         form = SucursalForm()
     return render(request, 'farmacia/crear_sucursal.html', {'form': form, 'accion': 'Registrar'})
@@ -31,19 +31,30 @@ def editar_sucursal(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '✏️ Sucursal actualizada correctamente.')
-            return redirect('listar_sucursal')
+            return redirect('sucursal:listar_sucursal')
     else:
         form = SucursalForm(instance=sucursal)
-    return render(request, 'farmacia/editar_sucursal.html', {'form': form, 'accion': 'Editar'})
+    return render(request, 'farmacia/editar_sucursal.html', {
+        'form': form,
+        'accion': 'Editar',
+        'sucursal': sucursal   # ✅ pasar sucursal al template
+    })
 
 # 🔹 Eliminar sucursal
 def eliminar_sucursal(request, id):
     sucursal = get_object_or_404(Sucursal, id=id)
     sucursal.delete()
     messages.success(request, '🗑️ Sucursal eliminada correctamente.')
-    return redirect('listar_sucursal')
+    return redirect('sucursal:listar_sucursal')
 
 # 🔹 Verificar si un NIT ya existe
 def verificar_nit(request, nit):
     existe = Sucursal.objects.filter(nit=nit).exists()
+    return JsonResponse({'existe': existe})
+
+from django.http import JsonResponse
+
+# 🔹 Verificar sucursal por ID (para JS)
+def verificar_sucursal(request, id):
+    existe = Sucursal.objects.filter(id=id).exists()
     return JsonResponse({'existe': existe})

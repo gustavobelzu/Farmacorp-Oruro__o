@@ -140,7 +140,15 @@
         </div>
         <div class="menu">
             <a href="{% url 'farmacia:sucursal' %}"><img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="Sucursal">SUCURSAL</a>
-            <a href="{% url 'producto_listar' %}"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">PRODUCTOS</a>
+            <a href="{% url 'producto_listar' %}" class="menu-item"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">PRODUCTOS</a>
+            <a href="{% url 'farmacia:inventario' %}"><img src="https://cdn-icons-png.flaticon.com/128/2825/2825867.png" alt="Inventario">INVENTARIO</a>
+            <a href="{% url 'empleados:listar_empleados' %}"><img src="https://cdn-icons-png.flaticon.com/512/219/219983.png" alt="Empleados">EMPLEADOS</a>
+            <a href="{% url 'clientes:listar_clientes' %}"><img src="https://cdn-icons-png.flaticon.com/128/6012/6012311.png" alt="Clientes">CLIENTES</a>
+            <a href="{% url 'farmacia:receta' %}"><img src="https://cdn-icons-png.flaticon.com/128/4521/4521516.png" alt="Recetas">RECETAS</a>
+            <a href="{% url 'farmacia:proveedor' %}"><img src="https://cdn-icons-png.flaticon.com/128/10839/10839198.png" alt="Proveedores">PROVEEDORES</a>
+            <a href="{% url 'farmacia:reporte' %}"><img src="https://cdn-icons-png.flaticon.com/128/1055/1055644.png" alt="Reportes">REPORTES</a>
+            <a href="{% url 'farmacia:alerta' %}"><img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Alertas">ALERTAS</a>
+            <a href="{% url 'farmacia:venta' %}"><img src="https://cdn-icons-png.flaticon.com/128/9362/9362302.png" alt="Ventas">VENTAS</a>
         </div>
     </div>
 
@@ -208,30 +216,31 @@
             if (event.target === modal) modal.style.display = 'none';
         });
 
-        aceptarBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-            const nitInput = form.querySelector('input[name="nit"]').value.trim();
-            if (!nitInput) {
-                mensajeNit.textContent = 'Debes ingresar un NIT';
-                return;
-            }
+        aceptarBtn.addEventListener('click', function(){
+    modal.style.display='none';
+    const nitInput = form.querySelector('input[name="nit"]').value.trim();
+    if(!nitInput){ 
+        mensajeNit.textContent = 'Debes ingresar un NIT';
+        return; 
+    }
 
-            // Verificar si el NIT ya existe
-            fetch(`/sucursal/verificar/${nitInput}/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.existe) {
-                        mensajeNit.textContent = `⚠️ El NIT "${nitInput}" ya existe.`;
-                    } else {
-                        mensajeNit.textContent = '';
-                        form.submit();
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    mensajeNit.textContent = 'Error al verificar el NIT';
-                });
+    // Verificar si el NIT existe
+    fetch(`/sucursal/verificar_nit/${nitInput}/`)
+        .then(resp => resp.json())
+        .then(data => {
+            if(data.existe){ 
+                mensajeNit.textContent = `⚠️ El NIT "${nitInput}" ya existe.`; 
+            } else { 
+                mensajeNit.textContent=''; 
+                form.submit(); 
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            mensajeNit.textContent='Error al verificar el NIT';
         });
+});
+
 
         const okBtn = document.getElementById('ok-btn');
         if (okBtn) {
