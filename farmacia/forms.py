@@ -15,5 +15,6 @@ class FarmaciaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Si es edición (instance existe), bloqueamos el campo nombre_farmacia
-        if self.instance and self.instance.pk:
-            self.fields['nombre_farmacia'].widget.attrs['readonly'] = True
+        #if self.instance and self.instance.pk:
+        # self.fields['nombre_farmacia'].widget.attrs['readonly'] = True
+

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
         body { font-family: Arial,sans-serif; margin:0; padding:0; display:flex; background:#e3f2fd; }
-        /* === SIDEBAR === */
         .sidebar { width:250px; background:#2196f3; color:#fff; height:100vh; display:flex; flex-direction:column; position:fixed; }
         .sidebar-header { text-align:center; padding:20px 10px; border-bottom:2px solid #1976d2; }
         .sidebar-header img { width:80px; height:auto; }
@@ -15,7 +14,7 @@
         .menu { flex:1; display:flex; flex-direction:column; padding:20px 0; }
         .menu a { display:flex; align-items:center; padding:12px 20px; color:white; text-decoration:none; font-weight:bold; transition:background 0.2s; }
         .menu a:hover { background:#1e88e5; }
-        /* === CONTENIDO PRINCIPAL === */
+        .menu a img { width:28px; margin-right:12px; }
         .main { margin-left:250px; padding:30px; flex:1; }
         h1 { text-align:center; color:#1565c0; }
         form { display:grid; grid-template-columns:1fr 1fr; gap:20px 40px; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 12px #00000022; max-width:800px; margin:20px auto; }
@@ -24,16 +23,9 @@
         .form-buttons { grid-column:1/-1; display:flex; justify-content:center; gap:20px; margin-top:20px; }
         .form-buttons button, .form-buttons a { background:#64b5f6; color:white; padding:10px 18px; border:none; border-radius:5px; font-weight:bold; cursor:pointer; text-decoration:none; transition:background 0.2s; }
         .form-buttons button:hover, .form-buttons a:hover { background:#1e88e5; }
-        .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); }
-        .modal-content { background-color:#fff; margin:15% auto; padding:30px; border-radius:10px; width:400px; max-width:90%; text-align:center; box-shadow:0 4px 12px #00000033; }
-        .modal h2 { margin-bottom:10px; color:#1565c0; }
-        .modal-buttons { display:flex; justify-content:space-around; margin-top:20px; }
-        .modal-buttons button { padding:10px 20px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; transition:background 0.2s; }
-        #aceptar-btn { background-color:#64b5f6; color:white; } #aceptar-btn:hover { background-color:#1e88e5; }
-        #cancelar-btn { background-color:#f44336; color:white; } #cancelar-btn:hover { background-color:#d32f2f; }
-        #successModal .modal-content { background-color:#e8f5e9; border:2px solid #4caf50; }
-        #successModal h2 { color:#2e7d32; }
         #mensajeNombre { color:red; font-size:13px; }
+
+  
     </style>
 </head>
 <body>
@@ -46,25 +38,29 @@
 </div>
 {% endif %}
 
-<!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-header">
         <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacorp">
         <h2>FARMACORP</h2>
     </div>
     <div class="menu">
-        <a href="{% url 'farmacia:sucursal' %}">SUCURSAL</a>
-        <a href="{% url 'farmacia:listar_farmacia' sucursal.id %}">FARMACIAS</a>
-        <a href="{% url 'farmacia:dashboard' %}">DASHBOARD</a>
+        <a href="{% url 'farmacia:sucursal' %}"><img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="Sucursal">SUCURSAL</a>
+            <a href="{% url 'producto_listar' %}" class="menu-item"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">PRODUCTOS</a>
+            <a href="{% url 'farmacia:inventario' %}"><img src="https://cdn-icons-png.flaticon.com/128/2825/2825867.png" alt="Inventario">INVENTARIO</a>
+            <a href="{% url 'empleados:listar_empleados' %}"><img src="https://cdn-icons-png.flaticon.com/512/219/219983.png" alt="Empleados">EMPLEADOS</a>
+            <a href="{% url 'clientes:listar_clientes' %}"><img src="https://cdn-icons-png.flaticon.com/128/6012/6012311.png" alt="Clientes">CLIENTES</a>
+            <a href="{% url 'farmacia:receta' %}"><img src="https://cdn-icons-png.flaticon.com/128/4521/4521516.png" alt="Recetas">RECETAS</a>
+            <a href="{% url 'farmacia:proveedor' %}"><img src="https://cdn-icons-png.flaticon.com/128/10839/10839198.png" alt="Proveedores">PROVEEDORES</a>
+            <a href="{% url 'farmacia:reporte' %}"><img src="https://cdn-icons-png.flaticon.com/128/1055/1055644.png" alt="Reportes">REPORTES</a>
+            <a href="{% url 'farmacia:alerta' %}"><img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Alertas">ALERTAS</a>
+            <a href="{% url 'farmacia:venta' %}"><img src="https://cdn-icons-png.flaticon.com/128/9362/9362302.png" alt="Ventas">VENTAS</a>
     </div>
 </div>
 
-<!-- Contenido principal -->
 <div class="main">
     <h1>Registrar Nueva Farmacia</h1>
-    <form method="post">
+    <form method="post" id="farmaciaForm">
         {% csrf_token %}
-
         <div>
             <label>Nombre de Farmacia</label>
             {{ form.nombre_farmacia }}
@@ -83,80 +79,40 @@
 
         <div class="form-buttons">
             <button type="submit" id="guardar-btn">Guardar</button>
-            <a href="{% url 'farmacia:listar_farmacia' sucursal.id %}">Ver Listado</a>
+            <a href="{% url 'farmacia:listar_farmacia' %}">Ver Listado</a>
         </div>
     </form>
 </div>
 
-<!-- Modal de confirmación -->
-<div id="confirmModal" class="modal">
-    <div class="modal-content">
-        <h2>Confirmar</h2>
-        <p>¿Deseas guardar esta farmacia?</p>
-        <div class="modal-buttons">
-            <button id="aceptar-btn">Aceptar</button>
-            <button id="cancelar-btn">Cancelar</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de éxito -->
-{% if farmacia_guardada %}
-<div id="successModal" class="modal" style="display:block;">
-    <div class="modal-content">
-        <h2>✅ Farmacia guardada correctamente</h2>
-        <div class="modal-buttons">
-            <button id="ok-btn">Aceptar</button>
-        </div>
-    </div>
-</div>
-{% endif %}
-
 <script>
-const form = document.querySelector('form');
-const guardarBtn = document.getElementById('guardar-btn');
-const modal = document.getElementById('confirmModal');
-const aceptarBtn = document.getElementById('aceptar-btn');
-const cancelarBtn = document.getElementById('cancelar-btn');
-const mensajeDiv = document.getElementById('mensajeNombre');
+document.getElementById('farmaciaForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Detener submit
 
-guardarBtn.addEventListener('click', function(event){
-    event.preventDefault();
-    modal.style.display = 'block';
-});
-cancelarBtn.addEventListener('click', function(){ modal.style.display='none'; });
-window.addEventListener('click', function(event){ if(event.target===modal) modal.style.display='none'; });
+    const nombreInput = document.querySelector('input[name="nombre_farmacia"]').value.trim();
+    const mensajeDiv = document.getElementById('mensajeNombre');
+    if (!nombreInput) { 
+        mensajeDiv.textContent = 'Debes ingresar un nombre'; 
+        return; 
+    }
 
-aceptarBtn.addEventListener('click', function(){
-    modal.style.display='none';
-    const nombreInput = form.querySelector('input[name="nombre_farmacia"]').value.trim();
-    if(!nombreInput){ mensajeDiv.textContent='Debes ingresar un nombre'; return; }
-
-    // Generamos URL de verificación usando Django url tag
+    // Llamada AJAX para verificar si ya existe la farmacia
     const verificarUrl = "{% url 'farmacia:verificar_farmacia' 'NOMBRE_TEMP' %}".replace('NOMBRE_TEMP', encodeURIComponent(nombreInput));
 
     fetch(verificarUrl)
         .then(resp => resp.json())
         .then(data => {
-            if(data.existe){ 
-                mensajeDiv.textContent=`⚠️ El nombre "${nombreInput}" ya existe.`; 
-            } else { 
-                mensajeDiv.textContent=''; 
-                form.submit(); 
+            if (data.existe) {
+                mensajeDiv.textContent = `⚠️ El nombre "${nombreInput}" ya existe.`;
+            } else {
+                mensajeDiv.textContent = '';
+                this.submit(); // Enviar el formulario
             }
-        }).catch(err => {
-            console.error(err); 
-            mensajeDiv.textContent='Error al verificar el nombre'; 
+        })
+        .catch(err => {
+            console.error(err);
+            mensajeDiv.textContent = 'Error al verificar el nombre';
         });
 });
-
-// Modal éxito
-const okBtn = document.getElementById('ok-btn');
-if(okBtn){ 
-    okBtn.addEventListener('click', ()=>{ 
-        window.location.href="{% url 'farmacia:listar_farmacia' sucursal.id %}"; 
-    }); 
-}
 </script>
 
 </body>

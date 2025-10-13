@@ -6,14 +6,22 @@ app_name = 'farmacia'
 urlpatterns = [
     # Dashboard principal
     path('', views.dashboard, name='dashboard'),
-    # farmacia/urls.py
+
+    # Listar todas las farmacias
     path('farmacias/', views.listar_farmacia, name='listar_farmacia'),
-# urls.py
+    path('farmacias/todas/', views.listar_farmacia, name='listar_todas_farmacias'),
+
+    # Crear farmacia (no requiere id)
     path('farmacias/nueva/', views.crear_farmacia, name='crear_farmacia'),
-    path('farmacias/editar/<int:id_farmacia>/', views.editar_farmacia, name='editar_farmacia'),
-    path('farmacia/farmacias/eliminar/<int:id>/', views.eliminar_farmacia, name='eliminar_farmacia'),
+
+    # Editar y eliminar farmacia (requieren id)
+    path('farmacias/editar/<int:id>/', views.editar_farmacia, name='editar_farmacia'),
+    path('farmacias/eliminar/<int:id>/', views.eliminar_farmacia, name='eliminar_farmacia'),
+
+    # Verificar farmacia por nombre (AJAX)
     path('verificar/<str:nombre>/', views.verificar_farmacia, name='verificar_farmacia'),
-    # Vistas de farmacia
+
+    # Otras vistas generales de farmacia
     path('farmacia/', views.farmacia_view, name='farmacia'),
     path('usuario/', views.usuario_view, name='usuario'),
     path('sucursal/', views.sucursal_view, name='sucursal'),
@@ -28,5 +36,3 @@ urlpatterns = [
     path('inventario/', views.inventario_view, name='inventario'),
     path('almacen/', views.almacen_view, name='almacen'),
 ]
-
-

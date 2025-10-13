@@ -85,26 +85,23 @@ def listar_farmacia(request):
         'farmacias': farmacias
     })
 
-# 🔹 Crear farmacia
 @login_required_custom
-def crear_farmacia(request, id):  # id de sucursal
-    sucursal = get_object_or_404(Sucursal, id=id)
+def crear_farmacia(request):
     farmacia_guardada = False
     if request.method == 'POST':
         form = FarmaciaForm(request.POST)
         if form.is_valid():
-            farmacia = form.save(commit=False)
-            farmacia.id_sucursal = sucursal
-            farmacia.save()
-            farmacia_guardada = True  # para mostrar modal
+            form.save()
+            # Redirigir a la lista de farmacias después de guardar
+            messages.success(request, '✅ Farmacia guardada correctamente.')
+            return redirect('farmacia:listar_farmacia')
     else:
         form = FarmaciaForm()
+    
     return render(request, 'farmacia/crear_farmacia.html', {
         'form': form,
-        'sucursal': sucursal,
         'farmacia_guardada': farmacia_guardada
     })
-
 
 # Editar farmacia
 @login_required_custom
@@ -115,19 +112,19 @@ def editar_farmacia(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '✏️ Farmacia actualizada correctamente.')
-            return redirect('farmacia:listar_farmacia', id=farmacia.id_sucursal.id)
+            return redirect('farmacia:listar_farmacia')
     else:
         form = FarmaciaForm(instance=farmacia)
     return render(request, 'farmacia/editar_farmacia.html', {'form': form, 'accion': 'Editar'})
 
 # Eliminar farmacia
 @login_required_custom
-def eliminar_farmacia(request, id_farmacia):
-    farmacia = get_object_or_404(Farmacia, id=id_farmacia)
-    sucursal_id = farmacia.id_sucursal.id
+def eliminar_farmacia(request, id):
+    farmacia = get_object_or_404(Farmacia, id=id)
     farmacia.delete()
     messages.success(request, '🗑️ Farmacia eliminada correctamente.')
     return redirect('farmacia:listar_farmacia')
+
 # -------------------- AJAX: Verificar farmacia por nombre --------------------
 # 🔹 Verificar si el nombre de la farmacia ya existe (AJAX)
 @login_required_custom
