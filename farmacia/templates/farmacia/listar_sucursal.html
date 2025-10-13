@@ -3,114 +3,139 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Sucursales</title>
+    <title>Listado de Sucursales</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f4f8;
+            background: #e3f2fd;
             margin: 0;
             padding: 0;
-        }
-
-        header {
-            background: #1976d2;
-            color: white;
-            padding: 15px 25px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        header h1 {
-            font-size: 22px;
-            margin: 0;
+        /* === SIDEBAR === */
+        .sidebar { width:250px; background:#2196f3; color:#fff; height:100vh; display:flex; flex-direction:column; position:fixed; }
+        .sidebar-header { text-align:center; padding:20px 10px; border-bottom:2px solid #1976d2; }
+        .sidebar-header img { width:80px; height:auto; }
+        .sidebar-header h2 { margin:10px 0 0; font-size:1.5em; }
+        .menu { flex:1; display:flex; flex-direction:column; padding:20px 0; }
+        .menu a { display:flex; align-items:center; padding:12px 20px; color:white; text-decoration:none; font-weight:bold; transition:background 0.2s; }
+        .menu a img { width:28px; margin-right:12px; }
+        .menu a:hover { background:#1e88e5; }
+
+        /* === CONTENIDO PRINCIPAL === */
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+            flex: 1;
         }
 
-        a.boton {
-            background: #2196f3;
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: 0.2s;
-        }
-
-        a.boton:hover {
-            background: #1565c0;
-        }
-
-        .contenedor {
-            width: 95%;
-            margin: 30px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        h1 {
+            text-align: center;
+            color: #1565c0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
+            background: #fff;
+            box-shadow: 0 4px 12px #00000022;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         th, td {
+            padding: 12px 15px;
             text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: #e3f2fd;
+            background: #2196f3;
+            color: #fff;
         }
 
-        .acciones a {
-            margin-right: 5px;
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .action-buttons a {
+            padding: 6px 12px;
+            border-radius: 5px;
+            color: #fff;
             text-decoration: none;
-            padding: 5px 8px;
-            border-radius: 5px;
-            color: white;
-            font-size: 12px;
+            margin-right: 5px;
+            font-size: 0.9em;
         }
 
-        .editar { background: #4caf50; }
-        .eliminar { background: #f44336; }
-        .farmacia { background: #ff9800; }
+        .action-buttons .edit { background: #64b5f6; }
+        .action-buttons .delete { background: #f44336; }
+        .action-buttons .farmacia { background: #4caf50; }
 
-        .mensaje {
-            margin: 10px 0;
-            padding: 10px;
-            background: #dff0d8;
-            color: #3c763d;
-            border-radius: 5px;
+        .top-buttons {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
         }
+
+        .top-buttons a {
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            background: #2196f3;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .top-buttons a:hover { background: #1e88e5; }
+
+        /* Mensajes Django */
+        .alert-box { max-width: 900px; margin: 20px auto; }
+        .alert { padding: 12px 20px; border-radius: 5px; margin-bottom: 10px; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; }
     </style>
 </head>
 <body>
-    <header>
-        <h1>🏪 Lista de Sucursales</h1>
-        <a href="{% url 'crear_sucursal' %}" class="boton">➕ Nueva Sucursal</a>
-    </header>
+    {% if messages %}
+    <div class="alert-box">
+      {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
-    <div class="contenedor">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="mensaje">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://veltio.com/wp-content/uploads/2022/03/Farmacorp-logo.jpg" alt="Logo Farmacorp">
+            <h2>FARMACORP</h2>
+        </div>
+        <div class="menu">
+            <a href="{% url 'sucursal:listar_sucursal' %}"><img src="https://cdn-icons-png.flaticon.com/128/13163/13163163.png" alt="Sucursal">SUCURSAL</a>
+            <a href="{% url 'producto_listar' %}"><img src="https://cdn-icons-png.flaticon.com/128/647/647237.png" alt="Productos">PRODUCTOS</a>
+            <a href="{% url 'farmacia:dashboard' %}"><img src="https://cdn-icons-png.flaticon.com/128/2825/2825867.png" alt="Dashboard">DASHBOARD</a>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main">
+        <h1>Listado de Sucursales</h1>
+
+        <div class="top-buttons">
+            <a href="{% url 'sucursal:crear_sucursal' %}">➕ Crear Sucursal</a>
+            <a href="{% url 'farmacia:listar_farmacia' %}">🏥 Ver Todas las Farmacias</a>
+        </div>
 
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>ID Sucursal</th>
                     <th>Nombre</th>
                     <th>Departamento</th>
                     <th>NIT</th>
-                    <th>Email</th>
-                    <th>Dirección</th>
-                    <th>Horario</th>
-                    <th>Fecha Registro</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -121,19 +146,14 @@
                     <td>{{ sucursal.nombre }}</td>
                     <td>{{ sucursal.departamento }}</td>
                     <td>{{ sucursal.nit }}</td>
-                    <td>{{ sucursal.email }}</td>
-                    <td>{{ sucursal.direccion }}</td>
-                    <td>{{ sucursal.horario }}</td>
-                    <td>{{ sucursal.fecha_registro }}</td>
-                    <td class="acciones">
-                        <a href="{% url 'editar_sucursal' sucursal.id %}" class="editar">✏️ Editar</a>
-                        <a href="{% url 'eliminar_sucursal' sucursal.id %}" class="eliminar" onclick="return confirm('¿Seguro que deseas eliminar esta sucursal?');">🗑️ Eliminar</a>
-                        <a href="{% url 'listar_farmacia' sucursal.id %}" class="farmacia">🏥 Farmacias</a>
+                    <td class="action-buttons">
+                        <a href="{% url 'sucursal:editar_sucursal' sucursal.id %}" class="edit">✏️ Editar</a>
+                        <a href="{% url 'sucursal:eliminar_sucursal' sucursal.id %}" class="delete">🗑️ Eliminar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="9" style="text-align:center;">No hay sucursales registradas.</td>
+                    <td colspan="5" style="text-align:center;">No hay sucursales registradas.</td>
                 </tr>
                 {% endfor %}
             </tbody>

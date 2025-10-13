@@ -1,15 +1,16 @@
 from django import forms
-from .models import Farmacia
+from .models import Farmacia, Sucursal
 
 class FarmaciaForm(forms.ModelForm):
     class Meta:
         model = Farmacia
-        fields = '__all__'
+        fields = ['nombre_farmacia', 'razon_legal', 'id_sucursal']  # Solo los campos existentes
         widgets = {
             'nombre_farmacia': forms.TextInput(attrs={'class': 'form-control'}),
             'razon_legal': forms.TextInput(attrs={'class': 'form-control'}),
-            'id_sucursal': forms.Select(attrs={'class': 'form-select'}),
+            'id_sucursal': forms.Select(attrs={'class': 'form-control'}),
         }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

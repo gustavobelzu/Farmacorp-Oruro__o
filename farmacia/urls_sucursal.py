@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views_sucursal
 from . import views  # para funciones de farmacias
+app_name = 'sucursal'
 
 
 urlpatterns = [
@@ -9,4 +10,7 @@ urlpatterns = [
     path('editar/<int:id>/', views_sucursal.editar_sucursal, name='editar_sucursal'),
     path('eliminar/<int:id>/', views_sucursal.eliminar_sucursal, name='eliminar_sucursal'),
     path('farmacia/<int:id>/', views.listar_farmacia, name='listar_farmacia'),  # ✅ usar views
+    # ✅ Verificar NIT
+    path('sucursal/verificar/<str:nit>/', views_sucursal.verificar_nit, name='verificar_nit'),
+
 ]

@@ -6,10 +6,13 @@ app_name = 'farmacia'
 urlpatterns = [
     # Dashboard principal
     path('', views.dashboard, name='dashboard'),
+    # farmacia/urls.py
     path('farmacias/', views.listar_farmacia, name='listar_farmacia'),
-    path('farmacias/nueva/', views.crear_farmacia, name='crear_farmacia'),
-    path('farmacias/editar/<int:id>/', views.editar_farmacia, name='editar_farmacia'),
-    path('farmacias/eliminar/<int:id>/', views.eliminar_farmacia, name='eliminar_farmacia'),
+    path('sucursal/<int:id>/farmacias/nueva/', views.crear_farmacia, name='crear_farmacia'),
+    path('sucursal/<int:id>/farmacias/editar/<int:id_farmacia>/', views.editar_farmacia, name='editar_farmacia'),
+    path('sucursal/<int:id>/farmacias/eliminar/<int:id_farmacia>/', views.eliminar_farmacia, name='eliminar_farmacia'),
+    path('verificar/<str:nombre>/', views.verificar_farmacia, name='verificar_farmacia'),
+
     # Vistas de farmacia
     path('farmacia/', views.farmacia_view, name='farmacia'),
     path('usuario/', views.usuario_view, name='usuario'),

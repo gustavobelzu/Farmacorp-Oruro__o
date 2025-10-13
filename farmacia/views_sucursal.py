@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Sucursal
 from .forms_sucursal import SucursalForm
+from django.http import JsonResponse
+
 
 # 🔹 Listar sucursales
 def listar_sucursal(request):
@@ -40,3 +42,8 @@ def eliminar_sucursal(request, id):
     sucursal.delete()
     messages.success(request, '🗑️ Sucursal eliminada correctamente.')
     return redirect('listar_sucursal')
+
+# 🔹 Verificar si un NIT ya existe
+def verificar_nit(request, nit):
+    existe = Sucursal.objects.filter(nit=nit).exists()
+    return JsonResponse({'existe': existe})

@@ -6,11 +6,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('usuarios:login')),  # Redirige al login
     # 🔹 Redirige raíz al listado de sucursales (por ejemplo)
-    path('', lambda request: redirect('listar_sucursal')),
-
     # 🔹 Módulos
-    path('', include('farmacia.urls')),           # rutas para farmacia
-    path('', include('farmacia.urls_sucursal')),  # rutas para sucursal    
+    path('farmacia/', include('farmacia.urls', namespace='farmacia')),
+    path('sucursal/', include('farmacia.urls_sucursal', namespace='sucursal')),
+   
     path('usuarios/', include('usuarios.urls', namespace='usuarios')),
     path('clientes/', include('clientes.urls', namespace='clientes')),  # ← namespace
     path('productos/', include('productos.urls')),
